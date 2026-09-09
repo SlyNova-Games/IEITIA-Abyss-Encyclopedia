@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Infinite Echoes in The Infinite Abyss — Abyss Encyclopedia">
+  <title>Infinite Echoes — Abyss Encyclopedia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-title">Infinite Echoes</div>
+        <div class="brand-subtitle">IN THE INFINITE ABYSS</div>
+      </div>
+      <nav id="mainNav" class="nav"></nav>
+      <div class="sidebar-footer">Stats and information are subject to change during development.</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search the Abyss..." autocomplete="off">
+        </div>
+        <button id="spoilerToggle" class="spoiler-btn" type="button">◉ <span>SPOILERS OFF</span></button>
+      </header>
+
+      <section class="content">
+        <div id="page"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalRoot"></div>
+  <script src="script.js"></script>
+</body>
+</html>
