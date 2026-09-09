@@ -1,0 +1,5 @@
+{
+  "status": "pending-troops-import",
+  "usedEnemyIds": [],
+  "note": "This list is generated from Troops.json in the local editor. Only enemies referenced by actual troops should be published."
+}

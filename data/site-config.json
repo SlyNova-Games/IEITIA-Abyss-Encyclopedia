@@ -1,0 +1,55 @@
+{
+  "gameTitle": "Infinite Echoes in The Infinite Abyss",
+  "shortTitle": "Infinite Echoes",
+  "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
+  "version": "0.2.0",
+  "lastUpdated": "2026-09-09",
+  "dataStatus": "Development build \u2014 database entries are subject to change.",
+  "socials": [
+    {
+      "label": "Discord",
+      "url": "",
+      "icon": "\u25c8"
+    },
+    {
+      "label": "YouTube",
+      "url": "",
+      "icon": "\u25b6"
+    },
+    {
+      "label": "X / Twitter",
+      "url": "",
+      "icon": "\ud835\udd4f"
+    },
+    {
+      "label": "itch.io",
+      "url": "",
+      "icon": "\u25d2"
+    },
+    {
+      "label": "GitHub",
+      "url": "",
+      "icon": "\u25c6"
+    }
+  ],
+  "versionHistory": [
+    {
+      "version": "0.2.0",
+      "date": "2026-09-09",
+      "notes": [
+        "Reworked encyclopedia shell toward the game-like Web IMG direction.",
+        "Added animated enemy HP/stat bars and enemy category framework.",
+        "Separated the local editor from the public GitHub Pages site.",
+        "Added configurable social links, version history, and last-updated metadata."
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "date": "2026-09-08",
+      "notes": [
+        "Initial GitHub Pages prototype.",
+        "Imported the current armor database as the first working data set."
+      ]
+    }
+  ]
+}

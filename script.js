@@ -1,234 +1,65 @@
-const state = {
-  section: "overview",
-  spoilers: localStorage.getItem("ie_spoilers") === "1",
-  armors: [],
-  search: ""
+const DB={config:{},sets:{}};
+const rarity={Starter:{tier:0,color:'#CCCCCC'},Common:{tier:1,color:'#FFFFFF'},Uncommon:{tier:2,color:'#78FF78'},Rare:{tier:3,color:'#6B99E3'},Epic:{tier:4,color:'#FF78DD'},Legendary:{tier:5,color:'#FFCA2B'},Mythic:{tier:6,color:'#7B68EE'}};
+const categories={
+ weapons:{label:'Weapons',icon:'⚔',desc:'Weapons and their combat stats, effects, and rarity.'},
+ armor:{label:'Armor',icon:'♢',desc:'Armor, accessories, and defensive equipment.'},
+ items:{label:'Items',icon:'✦',desc:'Consumables, materials, key items, and other inventory entries.'},
+ skills:{label:'Skills',icon:'✧',desc:'Player, enemy, and special abilities.'},
+ states:{label:'Status Effects',icon:'ϟ',desc:'Buffs, debuffs, and other combat conditions.'},
+ enemies:{label:'Enemies',icon:'♙',desc:'Enemies encountered throughout the Abyss.'},
+ characters:{label:'Characters',icon:'♧',desc:'Characters, companions, and important figures.'}
 };
-
-const rarity = {
-  Starter:{tier:0,color:"#CCCCCC"}, Common:{tier:1,color:"#FFFFFF"}, Uncommon:{tier:2,color:"#78FF78"},
-  Rare:{tier:3,color:"#6B99E3"}, Epic:{tier:4,color:"#FF78DD"}, Legendary:{tier:5,color:"#FFCA2B"}, Mythic:{tier:6,color:"#7B68EE"}
-};
-
-const navItems = [
-  ["overview","▣","Overview",""],
-  ["weapons","⚔","Weapons","—"],
-  ["armor","♢","Armor","96"],
-  ["items","⚗","Items","—"],
-  ["skills","✦","Skills","—"],
-  ["status","ϟ","Status Effects","—"],
-  ["enemies","♙","Enemies","—"],
-  ["characters","♧","Characters","—"]
-];
-
-const categories = {
-  weapons:{icon:"⚔", title:"Weapons", desc:"Melee, ranged, and magical weapons from Tier 0 to Tier 6."},
-  armor:{icon:"♢", title:"Armor", desc:"Helmets, chestplates, gloves, shoes, shields, and accessories."},
-  items:{icon:"⚗", title:"Items", desc:"Healing items, materials, active items, and key items."},
-  skills:{icon:"✦", title:"Skills", desc:"Hero skills, enemy skills, and boss abilities."},
-  status:{icon:"ϟ", title:"Status Effects", desc:"Buffs, debuffs, passives, and status conditions."},
-  enemies:{icon:"♙", title:"Enemies", desc:"Normal enemies, champions, elites, mini-bosses, and bosses."},
-  characters:{icon:"♧", title:"Characters", desc:"Voy and his companions in the Abyss."}
-};
-
-async function loadData(){
-  try{
-    const res = await fetch("data/armors.json");
-    state.armors = await res.json();
-  }catch(e){ state.armors=[]; }
-  render();
+const nav=[['overview','⌂','Overview'],['weapons','⚔','Weapons'],['armor','♢','Armor'],['items','✦','Items'],['skills','✧','Skills'],['states','ϟ','Status Effects'],['enemies','♙','Enemies'],['characters','♧','Characters']];
+const state={route:'overview',query:'',spoilers:localStorage.getItem('ie_spoilers')==='1'};
+const $=s=>document.querySelector(s);
+function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function clean(v=''){return String(v).replace(/\\c\[\d+\]/g,'').replace(/\\[.!{}]/g,'').replace(/\\n/g,'\n').trim()}
+function badge(x){const r=rarity[x.rarity]||{tier:x.tier??'—',color:'#aaa'};return `<span class="badge" style="color:${r.color}"><i class="dot" style="color:${r.color};background:${r.color}"></i>${esc(x.rarity||'Unknown')} · Tier ${r.tier}</span>`}
+async function load(name){try{const r=await fetch(`data/${name}.json`);return await r.json()}catch{return []}}
+async function boot(){
+  DB.config=await load('site-config');
+  for(const k of Object.keys(categories))DB.sets[k]=await load(k==='states'?'states':k);
+  renderNav();renderFooter();applyMeta();bindGlobal();route();
 }
-
-function esc(s=""){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function applyMeta(){$('#brandTitle').textContent=DB.config.shortTitle||'Infinite Echoes';$('#versionBadge').textContent=`v${DB.config.version||'0.0.0'}`;document.title=`${DB.config.shortTitle||'Infinite Echoes'} — Encyclopedia`;}
+function renderNav(){$('#nav').innerHTML=nav.map(([id,icon,label])=>`<button class="nav-item" data-route="${id}"><span class="nav-icon">${icon}</span><span>${label}</span><span class="nav-count" data-count="${id}"></span></button>`).join('');document.querySelectorAll('[data-route]').forEach(b=>b.onclick=()=>go(b.dataset.route));for(const id of Object.keys(categories)){const el=$(`[data-count="${id}"]`);if(el)el.textContent=(DB.sets[id]||[]).length?DB.sets[id].length:''}}
+function renderFooter(){const socials=(DB.config.socials||[]).filter(x=>x.url);$('#footer').innerHTML=`<span>© ${new Date().getFullYear()} ${esc(DB.config.shortTitle||'Infinite Echoes')} · ${esc(DB.config.dataStatus||'Development data')}</span><span class="socials">${socials.map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.icon||'◈')} ${esc(x.label)}</a>`).join('')}</span>`}
+function bindGlobal(){$('#search').addEventListener('input',e=>{state.query=e.target.value;renderSearch()});$('#spoilerBtn').onclick=()=>{state.spoilers=!state.spoilers;localStorage.setItem('ie_spoilers',state.spoilers?'1':'0');updateSpoilerButton();route()};$('#mobileMenu').onclick=()=>document.body.classList.toggle('mobile-open');window.addEventListener('hashchange',route)}
+function updateSpoilerButton(){$('#spoilerBtn').classList.toggle('on',state.spoilers);$('#spoilerBtn span').textContent=state.spoilers?'Spoilers On':'Spoilers Off'}
+function go(route){state.query='';$('#search').value='';location.hash=`/${route}`;document.body.classList.remove('mobile-open')}
+function route(){updateSpoilerButton();const r=location.hash.replace(/^#\//,'')||'overview';state.route=r;if(state.query){renderSearch();return}if(r==='overview')renderOverview();else if(r==='version-history')renderHistory();else if(categories[r])renderCategory(r);else renderOverview()}
+function renderOverview(){const p=$('#page');const total=Object.values(DB.sets).reduce((a,x)=>a+x.length,0);p.innerHTML=`<section class="hero"><span class="eyebrow">✦ ABYSS ENCYCLOPEDIA · DEVELOPMENT BUILD</span><h1>Infinite Echoes <span>in The Infinite Abyss</span></h1><p>A living reference for the game's weapons, armor, items, skills, enemies, status effects, and characters. The database is designed to grow with the game as balancing and content development continue.</p><div class="hero-actions"><a class="button primary" href="#/enemies">Explore Enemies</a><a class="button" href="#/version-history">View Version History</a></div></section>
+<div class="section-head"><div><h2>Equipment Rarity</h2><p>Equipment uses the Tier 0–6 rarity ladder.</p></div></div><div class="rarity-strip">${Object.entries(rarity).map(([n,r])=>`<div class="rarity"><strong style="color:${r.color}"><i class="dot" style="color:${r.color};background:${r.color}"></i>${n}</strong><small>Tier ${r.tier}</small></div>`).join('')}</div>
+<div class="section-head"><div><h2>Encyclopedia</h2><p>${total?`${total} currently loaded entries.`:'The public build is ready for database content.'}</p></div></div><div class="category-grid">${Object.entries(categories).map(([id,c])=>`<article class="category" data-go="${id}"><div class="category-icon">${c.icon}</div><h3>${c.label}<span class="count">${(DB.sets[id]||[]).length||'—'}</span></h3><p>${c.desc}</p></article>`).join('')}</div>`;document.querySelectorAll('[data-go]').forEach(x=>x.onclick=()=>go(x.dataset.go))}
+function renderCategory(type){const c=categories[type],list=DB.sets[type]||[];if(type==='enemies')return renderEnemies(list);const p=$('#page');if(!list.length){p.innerHTML=`<div class="section-head"><div><h1 class="page-title">${c.label}</h1><p class="page-sub">${c.desc}</p></div></div><div class="placeholder"><strong>${c.icon} ${c.label} is ready for data.</strong>The current build does not yet bundle this database file. The local editor is prepared to import it without changing the public site's structure.</div>`;return}let items=[...list];p.innerHTML=`<div class="section-head"><div><h1 class="page-title">${c.label}</h1><p class="page-sub">${list.length} entries · ${esc(DB.config.dataStatus||'Data subject to change.')}</p></div></div><div class="toolbar"><select class="control" id="rarityFilter"><option value="">All Rarities</option>${Object.keys(rarity).map(x=>`<option>${x}</option>`).join('')}</select><input class="control" id="slotFilter" placeholder="Filter by slot/category..."><select class="control" id="sort"><option value="name">Sort: Name</option><option value="id">Sort: ID</option></select></div><div class="grid" id="cards"></div>`;const draw=()=>{const rf=$('#rarityFilter').value,sf=$('#slotFilter').value.toLowerCase(),sort=$('#sort').value;let a=items.filter(x=>(!rf||x.rarity===rf)&&(!sf||`${x.slot||''} ${x.category||''}`.toLowerCase().includes(sf)));a.sort((x,y)=>sort==='id'?(x.id||0)-(y.id||0):String(x.name||'').localeCompare(String(y.name||'')));$('#cards').innerHTML=a.map(x=>card(x,type)).join('')||`<div class="placeholder" style="grid-column:1/-1">No entries match these filters.</div>`;document.querySelectorAll('[data-entry]').forEach(el=>el.onclick=()=>openDetail(type,Number(el.dataset.entry)))};['rarityFilter','slotFilter','sort'].forEach(id=>$(id).addEventListener('input',draw));draw()}
+function card(x,type){const hidden=x.spoiler&&!state.spoilers;return `<article class="card" data-entry="${x.id}"><div class="card-art">${hidden?`<div class="spoiler"><div class="lock">🔒</div>SPOILER</div>`:(x.image?`<img src="${esc(x.image)}" alt="">`:categories[type].icon)}</div><div class="card-body"><div class="card-name">${esc(x.name||`Entry ${x.id}`)}</div>${x.rarity?badge(x):''}<div class="card-desc">${esc(clean(clean(x.description||x.note||''))).slice(0,110)}</div></div></article>`}
+function renderEnemies(list){const p=$('#page');const filters=['All','Normal Enemies','Champion Enemies','Elite Enemies','Elite Champions','Mini Bosses','Bosses','Abyss Enemy Catalog'];const buttons=filters.map(x=>'<button class="control enemy-filter">'+x+'</button>').join('');const body=list.length?'<div class="enemy-grid" id="enemyGrid">'+list.map(enemyCard).join('')+'</div>':'<div class="placeholder"><strong>♙ Enemy catalog is waiting for the encounter pass.</strong>The public build intentionally does not guess which enemies are used. The local editor can read Troops.json and generate the used-enemy list.</div>';p.innerHTML='<div class="section-head"><div><h1 class="page-title">Enemies</h1><p class="page-sub">Enemies are intended to be published from actual encounter usage in Troops.json — not every SV battler file.</p></div></div><div class="toolbar">'+buttons+'</div>'+body;document.querySelectorAll('.enemy-filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.enemy-filter').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');const q=b.textContent;document.querySelectorAll('.enemy-card').forEach(c=>c.style.display=q==='All'||c.dataset.category===q?'':'none')});document.querySelectorAll('[data-enemy]').forEach(x=>x.onclick=()=>openDetail('enemies',Number(x.dataset.enemy)));animateBars()}
+function enemyCard(x){
+  const p=x.params||[];
+  const hp=Number(p[0]||x.hp||0), mp=Number(p[1]||x.mp||0);
+  const hpPct=Math.min(100,Math.max(8,(hp/Math.max(1,Number(x.hpMax||hp||1)))*100));
+  const art=x.image ? '<img src="'+esc(x.image)+'" alt="">' : '♙';
+  const mpPct=Math.min(100,mp?Math.max(10,mp/Math.max(1,hp)*100):0);
+  return '<article class="enemy-card" data-enemy="'+x.id+'" data-category="'+esc(x.categoryLabel||x.category||'Normal Enemies')+'">'+
+    '<div class="enemy-top"><div class="enemy-art">'+art+'</div><div class="enemy-info">'+
+    '<div class="enemy-name">'+esc(x.name||('Entry '+x.id))+'</div><div class="enemy-type">'+esc(x.categoryLabel||x.category||'Normal Enemies')+'</div>'+
+    '<div class="bars"><div class="bar-row"><div class="bar-label"><span>HP</span><span>'+(hp||'—')+'</span></div><div class="bar"><div class="fill hp" data-fill="'+hpPct+'"></div></div></div>'+
+    '<div class="bar-row"><div class="bar-label"><span>MP</span><span>'+(mp||'—')+'</span></div><div class="bar"><div class="fill mp" data-fill="'+mpPct+'"></div></div></div></div></div></div>'+
+    '<div class="enemy-meta"><span class="pill">ID '+x.id+'</span><span class="pill">EXP '+(x.exp??'—')+'</span><span class="pill">'+(x.gold??0)+' G</span></div></article>';
 }
-function cleanText(s=""){
-  return s.replace(/\\c\[\d+\]/g,"").replace(/\\[{}]/g,"").replace(/\s+/g," ").trim();
+function animateBars(){requestAnimationFrame(()=>document.querySelectorAll('.fill').forEach(x=>x.style.width=x.dataset.fill+'%'))}
+function openDetail(type,id){
+  const x=(DB.sets[type]||[]).find(a=>Number(a.id)===id); if(!x)return;
+  const hidden=x.spoiler&&!state.spoilers, params=x.params||[], labels=['HP','MP','ATK','DEF','M.ATK','M.DEF','AGI','LUK'];
+  const art=hidden?'<div class="spoiler"><div class="lock">🔒</div>SPOILER<br><button class="button" id="reveal">Reveal</button></div>':(x.image?'<img src="'+esc(x.image)+'" alt="">':categories[type].icon);
+  const notes=clean((x.effects||[]).join('\n')||x.note||'No additional notes recorded.');
+  const rarityHtml=x.rarity?badge(x):'';
+  const stats=labels.map((l,i)=>'<div class="stat-box"><label>'+l+'</label><strong>'+((params[i]??'—'))+'</strong></div>').join('');
+  $('#modal').innerHTML='<div class="detail-modal" id="detailModal"><div class="detail-panel detail"><button class="close" id="close">✕</button><div class="detail-head"><div class="detail-art">'+art+'</div><div><div class="eyebrow">'+esc(categories[type].label)+' · ID '+x.id+'</div>'+rarityHtml+'<h2>'+esc(x.name||('Entry '+x.id))+'</h2><div class="detail-desc">'+esc(clean(x.description||x.note||'No description recorded.'))+'</div></div></div><div class="detail-body"><div class="section-head"><div><h2>Stats</h2><p>Values are database-facing and may change during development.</p></div></div><div class="stat-grid">'+stats+'</div><div class="section-head"><div><h2>Notes</h2></div></div><div class="placeholder" style="text-align:left;padding:18px">'+esc(notes)+'</div></div></div></div>';
+  $('#close').onclick=()=>$('#modal').innerHTML='';
+  $('#detailModal').onclick=e=>{if(e.target.id==='detailModal')$('#modal').innerHTML=''};
+  if(hidden)$('#reveal').onclick=()=>{state.spoilers=true;updateSpoilerButton();openDetail(type,id)};
 }
-function rarityBadge(item){
-  const r = rarity[item.rarity] || {color:"#999",tier:item.tier};
-  return `<span class="badge" style="color:${r.color}"><span class="rarity-dot" style="background:${r.color};color:${r.color}"></span>${esc(item.rarity)} · Tier ${item.tier}</span>`;
-}
-function iconFor(type){ return categories[type]?.icon || "◈"; }
-
-function renderNav(){
-  document.querySelector("#mainNav").innerHTML = navItems.map(([id,icon,label,count]) =>
-    `<button class="nav-item ${state.section===id?'active':''}" data-nav="${id}">
-      <span class="nav-icon">${icon}</span><span>${label}</span>${count && count!=="—"?`<span class="nav-count">${count}</span>`:""}
-    </button>`).join("");
-  document.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>{state.section=b.dataset.nav;state.search="";document.querySelector("#searchInput").value="";render();});
-}
-
-function render(){
-  renderNav();
-  document.querySelector("#spoilerToggle").classList.toggle("on",state.spoilers);
-  document.querySelector("#spoilerToggle span").textContent = state.spoilers ? "SPOILERS ON" : "SPOILERS OFF";
-  const page=document.querySelector("#page");
-  if(state.search.trim()){ renderSearch(page); return; }
-  if(state.section==="overview") renderOverview(page);
-  else if(state.section==="armor") renderArmor(page);
-  else if(state.section==="admin") renderAdmin(page);
-  else renderCategory(page,state.section);
-}
-
-function renderOverview(page){
-  page.innerHTML = `
-    <div class="hero">
-      <div class="hero-icon">▣</div>
-      <h1>Infinite Echoes <span>in The Infinite Abyss</span></h1>
-      <p>A comprehensive encyclopedia of weapons, armor, items, skills, enemies, and characters in the game. All stats and information are subject to change during development.</p>
-    </div>
-    <div class="section-label">Rarity System</div>
-    <div class="rarity-row">${Object.entries(rarity).map(([name,r])=>`
-      <div class="rarity-chip"><span class="rarity-dot" style="background:${r.color};color:${r.color}"></span><strong style="color:${r.color}">${name}</strong><span class="rarity-tier">Tier ${r.tier}</span></div>`).join("")}</div>
-    <div class="category-grid">
-      ${Object.entries(categories).map(([id,c])=>`
-        <div class="category-card" data-category="${id}">
-          <div class="category-icon">${c.icon}</div><div><h3>${c.title} ${id==="armor"?`<span class="nav-count">${state.armors.length}</span>`:""}</h3><p>${c.desc}</p></div><span class="chevron">›</span>
-        </div>`).join("")}
-    </div>
-    <div style="margin-top:24px;text-align:center">
-      <button class="btn" id="adminOpen">⚙ Open Editor Dashboard</button>
-    </div>`;
-  document.querySelectorAll("[data-category]").forEach(c=>c.onclick=()=>{state.section=c.dataset.category;render()});
-  document.querySelector("#adminOpen").onclick=()=>{state.section="admin";render()};
-}
-
-function renderCategory(page,type){
-  const c=categories[type];
-  let extra = "";
-  if(type==="enemies"){
-    extra = `<div class="controls">
-      ${["All","Normal Enemies","Champion Enemies","Elite Enemies","Elite Champions","Mini Bosses","Bosses","Abyss Enemy Catalog"].map(x=>`<button class="control">${x}</button>`).join("")}
-    </div>`;
-  }
-  page.innerHTML = `<div class="page-header"><div><h1 class="page-title">${c.title}</h1><p class="page-subtitle">${c.desc}</p></div></div>${extra}
-    <div class="empty">${iconFor(type)}<br><br>This section is ready for your game data.<br><br><small>Armor is currently populated from your RPG Maker database as a working example.</small></div>`;
-}
-
-function renderArmor(page){
-  const list=state.armors;
-  page.innerHTML=`
-    <div class="page-header"><div><h1 class="page-title">Armor</h1><p class="page-subtitle">${list.length} entries currently imported · stats are subject to change.</p></div></div>
-    <div class="controls">
-      <select id="rarityFilter" class="control"><option value="">All Rarities</option>${Object.keys(rarity).map(r=>`<option>${r}</option>`).join("")}</select>
-      <select id="slotFilter" class="control"><option value="">All Slots</option>${[...new Set(list.map(x=>x.slot))].sort().map(s=>`<option>${esc(s)}</option>`).join("")}</select>
-      <button id="sortName" class="control">Sort: Name</button>
-    </div>
-    <div id="armorGrid" class="grid"></div>`;
-  const draw=()=>{
-    const rf=document.querySelector("#rarityFilter").value, sf=document.querySelector("#slotFilter").value;
-    let items=list.filter(x=>(!rf||x.rarity===rf)&&(!sf||x.slot===sf));
-    items.sort((a,b)=>a.name.localeCompare(b.name));
-    document.querySelector("#armorGrid").innerHTML=items.length?items.map(card).join(""):`<div class="empty" style="grid-column:1/-1">No armor matches these filters.</div>`;
-    document.querySelectorAll("[data-entry]").forEach(x=>x.onclick=()=>showArmor(Number(x.dataset.entry)));
-  };
-  document.querySelector("#rarityFilter").onchange=draw;
-  document.querySelector("#slotFilter").onchange=draw;
-  document.querySelector("#sortName").onclick=draw;
-  draw();
-}
-function card(item){
-  const hidden=item.spoiler&&!state.spoilers;
-  return `<article class="entry-card" data-entry="${item.id}">
-    <div class="entry-image">${hidden?`<div class="spoiler-cover" style="width:100%;height:100%"><div class="lock">🔒</div><small>SPOILER IMAGE</small></div>`:item.image?`<img src="${esc(item.image)}" alt="">`:`♢`}</div>
-    <div class="entry-body"><div class="entry-name">${esc(item.name)}</div>${rarityBadge(item)}<div class="entry-desc">${esc(cleanText(item.description)).slice(0,115)}${cleanText(item.description).length>115?"…":""}</div></div>
-  </article>`;
-}
-
-function showArmor(id){
-  const item=state.armors.find(x=>x.id===id); if(!item)return;
-  const hidden=item.spoiler&&!state.spoilers;
-  const p=item.params||[0,0,0,0,0,0,0,0];
-  const labels=["HP","MP","ATK","DEF","M.ATK","M.DEF","Speed","Luck"];
-  document.querySelector("#modalRoot").innerHTML=`
-    <div class="modal-backdrop" id="modalBackdrop"><div class="modal">
-      <button class="back" id="closeModal">← Back to Armor</button>
-      <div class="detail-top">
-        <div class="detail-image">${hidden?`<div class="spoiler-cover" style="width:100%;height:100%"><div class="lock">🔒</div><strong>SPOILER IMAGE</strong><button class="reveal" id="revealOne">Reveal</button></div>`:item.image?`<img src="${esc(item.image)}" alt="${esc(item.name)}">`:`♢`}</div>
-        <div>
-          ${rarityBadge(item)}
-          <h1>${esc(item.name)}</h1>
-          <div class="page-subtitle">${esc(item.slot)} · Database ID ${item.id}</div>
-          <p class="detail-description">${esc(cleanText(item.description)).replace(/\n/g,"<br>")||"No description yet."}</p>
-        </div>
-      </div>
-      <div class="detail-section"><h2>Stats</h2><div class="stats">${labels.map((l,i)=>`<div class="stat"><label>${l}</label><strong>${p[i]>=0?"+":""}${p[i]}</strong></div>`).join("")}</div></div>
-      <div class="detail-section"><h2>Effects & Notes</h2>${item.effects?.length?item.effects.map(e=>`<div class="effect">${esc(cleanText(e))}</div>`).join(""):`<div class="effect">No additional effects recorded.</div>`}</div>
-      <div class="detail-section"><h2>Economy</h2><div class="stats"><div class="stat"><label>Buy Price</label><strong>${item.price||"—"}</strong></div><div class="stat"><label>Sell Price</label><strong>${item.sellPrice||"—"}</strong></div></div></div>
-    </div></div>`;
-  document.querySelector("#closeModal").onclick=()=>document.querySelector("#modalRoot").innerHTML="";
-  document.querySelector("#modalBackdrop").onclick=e=>{if(e.target.id==="modalBackdrop")document.querySelector("#modalRoot").innerHTML=""};
-  if(hidden) document.querySelector("#revealOne").onclick=()=>{item.spoiler=false;showArmor(id)};
-}
-
-function renderSearch(page){
-  const q=state.search.toLowerCase();
-  const results=state.armors.filter(x=>[x.name,x.description,x.rarity,x.slot,(x.effects||[]).join(" ")].join(" ").toLowerCase().includes(q));
-  page.innerHTML=`<div class="page-header"><div><h1 class="page-title">Search Results</h1><p class="page-subtitle">${results.length} result${results.length===1?"":"s"} for “${esc(state.search)}”</p></div></div>
-    <div class="search-results">${results.length?results.map(x=>`<div class="search-item" data-entry="${x.id}"><div class="search-type">Armor · ${esc(x.slot)}</div><strong>${esc(x.name)}</strong><div style="margin-top:5px">${rarityBadge(x)}</div></div>`).join(""):`<div class="empty">Nothing found in the current encyclopedia data.</div>`}</div>`;
-  document.querySelectorAll("[data-entry]").forEach(x=>x.onclick=()=>showArmor(Number(x.dataset.entry)));
-}
-
-function renderAdmin(page){
-  page.innerHTML=`
-    <div class="page-header"><div><h1 class="page-title">Editor Dashboard</h1><p class="page-subtitle">A simple local editor for static GitHub Pages hosting.</p></div></div>
-    <p class="admin-note"><strong>Important:</strong> GitHub Pages is static, so this editor cannot securely write to a server database. It edits your local browser copy and can export JSON for you to commit back to GitHub. That keeps the site completely free and avoids exposing an admin password in public code.</p>
-    <div class="admin-toolbar">
-      <button class="btn primary" id="newArmor">＋ New Armor</button>
-      <button class="btn" id="exportData">Export Armor JSON</button>
-      <label class="btn">Import Armor JSON <input id="importData" type="file" accept=".json" hidden></label>
-      <button class="btn" id="resetData">Reset to GitHub data</button>
-    </div>
-    <div class="grid">${state.armors.map(x=>`<div class="entry-card" data-edit="${x.id}"><div class="entry-body"><div class="entry-name">${esc(x.name)}</div>${rarityBadge(x)}<div class="entry-desc">${esc(cleanText(x.description)).slice(0,100)}</div></div></div>`).join("")}</div>`;
-  document.querySelectorAll("[data-edit]").forEach(x=>x.onclick=()=>editArmor(Number(x.dataset.edit)));
-  document.querySelector("#newArmor").onclick=()=>editArmor(null);
-  document.querySelector("#exportData").onclick=exportData;
-  document.querySelector("#resetData").onclick=async()=>{localStorage.removeItem("ie_armors");await loadData()};
-  document.querySelector("#importData").onchange=e=>importData(e.target.files[0]);
-  const saved=localStorage.getItem("ie_armors");
-  if(saved){try{state.armors=JSON.parse(saved)}catch(e){}}
-}
-
-function persist(){localStorage.setItem("ie_armors",JSON.stringify(state.armors));}
-function editArmor(id){
-  const item=id?state.armors.find(x=>x.id===id):{id:Math.max(0,...state.armors.map(x=>x.id))+1,name:"New Armor",description:"",rarity:"Common",tier:1,rarityColor:"#FFFFFF",slot:"Accessory",price:0,sellPrice:null,params:[0,0,0,0,0,0,0,0],effects:[],spoiler:false,image:""};
-  document.querySelector("#modalRoot").innerHTML=`<div class="modal-backdrop"><div class="modal"><h2>${id?"Edit":"Create"} Armor</h2>
-    <div class="form-grid">
-      <div class="form-field"><label>Name</label><input id="fName" value="${esc(item.name)}"></div>
-      <div class="form-field"><label>Slot</label><input id="fSlot" value="${esc(item.slot)}"></div>
-      <div class="form-field"><label>Rarity</label><select id="fRarity">${Object.keys(rarity).map(r=>`<option ${r===item.rarity?"selected":""}>${r}</option>`).join("")}</select></div>
-      <div class="form-field"><label>Tier</label><input id="fTier" type="number" value="${item.tier}"></div>
-      <div class="form-field full"><label>Description</label><textarea id="fDesc">${esc(item.description)}</textarea></div>
-      <div class="form-field full"><label>Image URL (optional)</label><input id="fImage" value="${esc(item.image||"")}" placeholder="https://..."></div>
-      ${["HP","MP","ATK","DEF","M.ATK","M.DEF","Speed","Luck"].map((l,i)=>`<div class="form-field"><label>${l}</label><input id="p${i}" type="number" value="${item.params[i]||0}"></div>`).join("")}
-      <div class="form-field"><label>Buy Price</label><input id="fPrice" type="number" value="${item.price||0}"></div>
-      <div class="form-field"><label>Sell Price</label><input id="fSell" value="${esc(item.sellPrice||"")}"></div>
-      <div class="form-field full"><label>Effects (one per line)</label><textarea id="fEffects">${esc((item.effects||[]).join("\n"))}</textarea></div>
-      <div class="form-field full"><label><input id="fSpoiler" type="checkbox" ${item.spoiler?"checked":""}> Mark image/details as spoiler</label></div>
-    </div>
-    <div class="modal-actions"><button class="btn" id="cancelEdit">Cancel</button><button class="btn primary" id="saveEdit">Save Changes</button></div>
-  </div></div>`;
-  document.querySelector("#cancelEdit").onclick=()=>document.querySelector("#modalRoot").innerHTML="";
-  document.querySelector("#saveEdit").onclick=()=>{
-    const r=document.querySelector("#fRarity").value;
-    const updated={...item,name:document.querySelector("#fName").value.trim(),slot:document.querySelector("#fSlot").value.trim(),rarity:r,tier:Number(document.querySelector("#fTier").value),rarityColor:rarity[r].color,description:document.querySelector("#fDesc").value,image:document.querySelector("#fImage").value,params:[0,1,2,3,4,5,6,7].map(i=>Number(document.querySelector("#p"+i).value)||0),price:Number(document.querySelector("#fPrice").value)||0,sellPrice:document.querySelector("#fSell").value.trim()||null,effects:document.querySelector("#fEffects").value.split("\n").map(x=>x.trim()).filter(Boolean),spoiler:document.querySelector("#fSpoiler").checked};
-    const idx=state.armors.findIndex(x=>x.id===item.id); if(idx>=0)state.armors[idx]=updated;else state.armors.push(updated);
-    persist();document.querySelector("#modalRoot").innerHTML="";render();
-  };
-}
-
-function exportData(){
-  const blob=new Blob([JSON.stringify(state.armors,null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="armors.json";a.click();URL.revokeObjectURL(a.href);
-}
-function importData(file){
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=()=>{try{state.armors=JSON.parse(reader.result);persist();render()}catch(e){alert("That file is not valid JSON.")}};
-  reader.readAsText(file);
-}
-
-document.querySelector("#searchInput").addEventListener("input",e=>{state.search=e.target.value;render()});
-document.querySelector("#spoilerToggle").onclick=()=>{state.spoilers=!state.spoilers;localStorage.setItem("ie_spoilers",state.spoilers?"1":"0");render()};
-loadData();
+function renderHistory(){const p=$('#page'),h=DB.config.versionHistory||[];const rows=h.map(v=>'<article class="version"><div class="version-top"><h3>v'+esc(v.version)+'</h3><date>'+esc(v.date)+'</date></div><ul>'+(v.notes||[]).map(n=>'<li>'+esc(n)+'</li>').join('')+'</ul></article>').join('');p.innerHTML='<div class="section-head"><div><h1 class="page-title">Version History</h1><p class="page-sub">Last updated '+esc(DB.config.lastUpdated||'—')+' · Current version '+esc(DB.config.version||'—')+'</p></div></div><div class="version-list">'+(rows||'<div class="placeholder">No version history has been recorded yet.</div>')+'</div>'}
+function renderSearch(){const q=state.query.toLowerCase().trim();if(!q){route();return}const hits=[];for(const [type,list] of Object.entries(DB.sets))for(const x of list){if(JSON.stringify(x).toLowerCase().includes(q))hits.push({type,x})}$('#crumb').textContent='Search';const cards=hits.map(h=>'<article class="card" style="margin-bottom:8px" data-search-type="'+h.type+'" data-search-id="'+h.x.id+'"><div class="card-body"><div class="card-name">'+esc(h.x.name||('Entry '+h.x.id))+'</div><div class="card-desc">'+esc(categories[h.type].label)+' · ID '+h.x.id+'</div></div></article>').join('');$('#page').innerHTML='<div class="section-head"><div><h1 class="page-title">Search</h1><p class="page-sub">'+hits.length+' result'+(hits.length===1?'':'s')+' for “'+esc(state.query)+'”</p></div></div>'+(cards||'<div class="empty-search">Nothing found in the currently bundled database.</div>');document.querySelectorAll('[data-search-id]').forEach(el=>el.onclick=()=>openDetail(el.dataset.searchType,Number(el.dataset.searchId)))}
+boot();
