@@ -43,3 +43,6 @@ body.spoilers-on .spoiler-hidden{filter:none;user-select:auto}
 
 /* 0.0.4D detail parameter values */
 .param-box.positive strong{color:var(--success)}.param-box.negative strong{color:var(--danger)}
+
+/* 0.0.4E compact metadata groups */
+.detail-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.detail-group{border:1px solid #202a3b;background:#101622;border-radius:7px;padding:9px 11px}.detail-group-title{font:700 8px JetBrains Mono;color:#6f7c91;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}.detail-group .data-row{padding:6px 0;font-size:10px}.detail-group .data-value{max-width:65%;}.param-box.positive strong{color:var(--success)}.param-box.negative strong{color:var(--danger)}.param-box.muted strong{color:#8b97aa}@media(max-width:760px){.detail-groups{grid-template-columns:1fr}}
