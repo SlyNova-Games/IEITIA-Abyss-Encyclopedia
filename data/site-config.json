@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4H",
+  "version": "0.0.4I",
   "lastUpdated": "2026-09-10",
   "dataStatus": "Beta revision \u2014 player-facing database details and version history are being refined. Database entries are subject to change.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4I",
+      "date": "2026-09-10",
+      "changes": "Improved tooltip layout; removed engine-specific wording from public terminology; corrected Invocation Speed guidance; added a public Glossary; moved unique-equipment requirement text into the Unique Only tooltip."
+    },
     {
       "version": "0.0.4H",
       "date": "2026-09-10",
