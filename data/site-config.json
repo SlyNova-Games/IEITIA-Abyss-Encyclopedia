@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.3",
+  "version": "0.0.4A",
   "lastUpdated": "2026-09-10",
-  "dataStatus": "Development build — database entries are subject to change.",
+  "dataStatus": "Beta revision \u2014 layout and organization are being refined. Database entries are subject to change.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,9 +13,31 @@
     "GitHub": ""
   },
   "versionHistory": [
-    {"version":"0.0.3","date":"2026-09-10","changes":"Reworked navigation, detail pages, sorting, enemy information, social links, and data filtering."},
-    {"version":"0.0.2","date":"2026-09-09","changes":"Added the larger RPG Maker database import and enemy encounter detection."},
-    {"version":"0.0.1","date":"2026-09-09","changes":"Initial encyclopedia prototype."},
-    {"version":"0.0.0","date":"2026-09-09","changes":"Project setup."}
-  ]
+    {
+      "version": "0.0.4A",
+      "date": "2026-09-10",
+      "changes": "Beta revision: restored bottom-left spoiler controls, added text-size controls, global header search, enemy previous/next navigation, corrected equipment tier mapping, equipment parameters, item categories, player skill categories, and playable character portraits."
+    },
+    {
+      "version": "0.0.3",
+      "date": "2026-09-10",
+      "changes": "Reworked navigation, detail pages, sorting, enemy information, social links, and data filtering."
+    },
+    {
+      "version": "0.0.2",
+      "date": "2026-09-09",
+      "changes": "Added the larger RPG Maker database import and enemy encounter detection."
+    },
+    {
+      "version": "0.0.1",
+      "date": "2026-09-09",
+      "changes": "Initial encyclopedia prototype."
+    },
+    {
+      "version": "0.0.0",
+      "date": "2026-09-09",
+      "changes": "Project setup."
+    }
+  ],
+  "spoilers": {}
 }
