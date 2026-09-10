@@ -2,54 +2,67 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "lastUpdated": "2026-09-09",
   "dataStatus": "Development build \u2014 database entries are subject to change.",
-  "socials": [
-    {
-      "label": "Discord",
-      "url": "",
-      "icon": "\u25c8"
-    },
-    {
-      "label": "YouTube",
-      "url": "",
-      "icon": "\u25b6"
-    },
-    {
-      "label": "X / Twitter",
-      "url": "",
-      "icon": "\ud835\udd4f"
-    },
-    {
-      "label": "itch.io",
-      "url": "",
-      "icon": "\u25d2"
-    },
-    {
-      "label": "GitHub",
-      "url": "",
-      "icon": "\u25c6"
-    }
-  ],
+  "socials": {
+    "Discord": "",
+    "YouTube": "",
+    "X / Twitter": "",
+    "GitHub": ""
+  },
   "versionHistory": [
+    {
+      "version": "0.3.0",
+      "date": "2026-09-09",
+      "changes": "Full RPG Maker database bundle, real enemy/weapon artwork, used-enemy detection, and animated stat bars."
+    },
     {
       "version": "0.2.0",
       "date": "2026-09-09",
-      "notes": [
-        "Reworked encyclopedia shell toward the game-like Web IMG direction.",
-        "Added animated enemy HP/stat bars and enemy category framework.",
-        "Separated the local editor from the public GitHub Pages site.",
-        "Added configurable social links, version history, and last-updated metadata."
-      ]
+      "changes": "Game-like purple encyclopedia layout and private local editor workflow."
     },
     {
       "version": "0.1.0",
       "date": "2026-09-08",
-      "notes": [
-        "Initial GitHub Pages prototype.",
-        "Imported the current armor database as the first working data set."
-      ]
+      "changes": "Initial encyclopedia prototype."
+    }
+  ],
+  "rarities": [
+    {
+      "name": "Starter",
+      "tier": 0,
+      "color": "#CCCCCC"
+    },
+    {
+      "name": "Common",
+      "tier": 1,
+      "color": "#FFFFFF"
+    },
+    {
+      "name": "Uncommon",
+      "tier": 2,
+      "color": "#78FF78"
+    },
+    {
+      "name": "Rare",
+      "tier": 3,
+      "color": "#6B99E3"
+    },
+    {
+      "name": "Epic",
+      "tier": 4,
+      "color": "#FF78DD"
+    },
+    {
+      "name": "Legendary",
+      "tier": 5,
+      "color": "#FFCA2B"
+    },
+    {
+      "name": "Mythic",
+      "tier": 6,
+      "color": "#7B68EE"
     }
   ]
 }

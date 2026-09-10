@@ -1,5 +1,33 @@
 {
-  "status": "pending-troops-import",
-  "usedEnemyIds": [],
-  "note": "This list is generated from Troops.json in the local editor. Only enemies referenced by actual troops should be published."
+  "usedEnemyIds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    12,
+    13,
+    14,
+    15,
+    23,
+    24
+  ],
+  "missingTroopEnemyIds": [
+    10,
+    16,
+    30,
+    31,
+    32,
+    33,
+    37,
+    39,
+    42,
+    43,
+    52
+  ],
+  "generatedFrom": "Troops.json"
 }
