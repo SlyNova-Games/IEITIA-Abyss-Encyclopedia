@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4L",
+  "version": "0.0.4M",
   "lastUpdated": "2026-09-10",
-  "dataStatus": "Beta revision — player-facing database details and version history are being refined. Database entries are subject to change.",
+  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4M",
+      "date": "2026-09-10",
+      "changes": "Refined skill card information and colors; removed skill occasion and price details from player-facing skill pages; restored enemy detail pages; added cleaner catalog descriptions and prepared the site icon."
+    },
     {
       "version": "0.0.4L",
       "date": "2026-09-10",
@@ -36,7 +41,7 @@
     {
       "version": "0.0.4H",
       "date": "2026-09-10",
-      "changes": "Added clickable skill links with hover previews for equipment effects; added contextual RPG Maker tooltips to metadata labels and values; added skill cooldown and warm-up details; simplified equipment requirement notes into player-facing requirement information."
+      "changes": "Added clickable skill links with hover previews for equipment effects; added contextual contextual tooltips to metadata labels and values; added skill cooldown and warm-up details; simplified equipment requirement notes into player-facing requirement information."
     },
     {
       "version": "0.0.4G",
@@ -46,7 +51,7 @@
     {
       "version": "0.0.4F",
       "date": "2026-09-10",
-      "changes": "Added a dedicated Version History page; made 0.0.4E and prior revisions directly accessible; improved note parsing for player-facing equipment conditions; removed player-facing database ID fields."
+      "changes": "Added a dedicated Version History page; made 0.0.4E and prior revisions directly accessible; improved note parsing for player-facing equipment conditions; removed player-facing catalog ID fields."
     },
     {
       "version": "0.0.4E",
@@ -66,7 +71,7 @@
     {
       "version": "0.0.4B",
       "date": "2026-09-10",
-      "changes": "Fixed entry routing and Recently Cataloged links; normalized database ID matching."
+      "changes": "Fixed entry routing and Recently Cataloged links; normalized entry linking."
     },
     {
       "version": "0.0.4A",
@@ -81,7 +86,7 @@
     {
       "version": "0.0.2",
       "date": "2026-09-09",
-      "changes": "Added the larger RPG Maker database import and enemy encounter detection."
+      "changes": "Added the larger expanded game content and enemy encounters."
     },
     {
       "version": "0.0.1",
