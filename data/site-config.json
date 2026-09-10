@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4F",
+  "version": "0.0.4G",
   "lastUpdated": "2026-09-10",
-  "dataStatus": "Beta revision \u2014 player-facing database details and version history are being refined. Database entries are subject to change.",
+  "dataStatus": "Beta revision — player-facing database details and version history are being refined. Database entries are subject to change.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4G",
+      "date": "2026-09-10",
+      "changes": "Fixed a critical missing catalog-rendering function that caused the public site to load only its background with no content. Restored cards, list rendering, sorting, filters, weapon artwork mapping, and added a visible load-error message for missing data files."
+    },
     {
       "version": "0.0.4F",
       "date": "2026-09-10",
