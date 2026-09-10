@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4A",
+  "version": "0.0.4B",
   "lastUpdated": "2026-09-10",
-  "dataStatus": "Beta revision \u2014 layout and organization are being refined. Database entries are subject to change.",
+  "dataStatus": "Beta revision \u2014 navigation and organization fixes are being refined. Database entries are subject to change.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4B",
+      "date": "2026-09-10",
+      "changes": "Fixed entry routing and Recently Cataloged links; normalized database ID matching."
+    },
     {
       "version": "0.0.4A",
       "date": "2026-09-10",
