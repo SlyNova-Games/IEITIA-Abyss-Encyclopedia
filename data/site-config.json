@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4C",
+  "version": "0.0.4D",
   "lastUpdated": "2026-09-10",
-  "dataStatus": "Beta revision \u2014 navigation and organization fixes are being refined. Database entries are subject to change.",
+  "dataStatus": "Beta revision — equipment and database-detail presentation are being refined. Database entries are subject to change.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4D",
+      "date": "2026-09-10",
+      "changes": "Expanded player-facing item, weapon, armor, and skill details; corrected trait/effect summaries; removed icon IDs and redundant tier labels; added color-coded detail parameters."
+    },
     {
       "version": "0.0.4C",
       "date": "2026-09-10",
