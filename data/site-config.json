@@ -2,67 +2,20 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.3.0",
-  "lastUpdated": "2026-09-09",
-  "dataStatus": "Development build \u2014 database entries are subject to change.",
+  "version": "0.0.3",
+  "lastUpdated": "2026-09-10",
+  "dataStatus": "Development build — database entries are subject to change.",
   "socials": {
     "Discord": "",
     "YouTube": "",
     "X / Twitter": "",
+    "itch.io": "",
     "GitHub": ""
   },
   "versionHistory": [
-    {
-      "version": "0.3.0",
-      "date": "2026-09-09",
-      "changes": "Full RPG Maker database bundle, real enemy/weapon artwork, used-enemy detection, and animated stat bars."
-    },
-    {
-      "version": "0.2.0",
-      "date": "2026-09-09",
-      "changes": "Game-like purple encyclopedia layout and private local editor workflow."
-    },
-    {
-      "version": "0.1.0",
-      "date": "2026-09-08",
-      "changes": "Initial encyclopedia prototype."
-    }
-  ],
-  "rarities": [
-    {
-      "name": "Starter",
-      "tier": 0,
-      "color": "#CCCCCC"
-    },
-    {
-      "name": "Common",
-      "tier": 1,
-      "color": "#FFFFFF"
-    },
-    {
-      "name": "Uncommon",
-      "tier": 2,
-      "color": "#78FF78"
-    },
-    {
-      "name": "Rare",
-      "tier": 3,
-      "color": "#6B99E3"
-    },
-    {
-      "name": "Epic",
-      "tier": 4,
-      "color": "#FF78DD"
-    },
-    {
-      "name": "Legendary",
-      "tier": 5,
-      "color": "#FFCA2B"
-    },
-    {
-      "name": "Mythic",
-      "tier": 6,
-      "color": "#7B68EE"
-    }
+    {"version":"0.0.3","date":"2026-09-10","changes":"Reworked navigation, detail pages, sorting, enemy information, social links, and data filtering."},
+    {"version":"0.0.2","date":"2026-09-09","changes":"Added the larger RPG Maker database import and enemy encounter detection."},
+    {"version":"0.0.1","date":"2026-09-09","changes":"Initial encyclopedia prototype."},
+    {"version":"0.0.0","date":"2026-09-09","changes":"Project setup."}
   ]
 }

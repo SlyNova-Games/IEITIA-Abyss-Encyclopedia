@@ -15,19 +15,5 @@
     15,
     23,
     24
-  ],
-  "missingTroopEnemyIds": [
-    10,
-    16,
-    30,
-    31,
-    32,
-    33,
-    37,
-    39,
-    42,
-    43,
-    52
-  ],
-  "generatedFrom": "Troops.json"
+  ]
 }
