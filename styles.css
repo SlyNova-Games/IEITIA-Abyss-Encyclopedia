@@ -231,3 +231,23 @@ body.modal-open{overflow:hidden}
 .panel-info{display:inline-flex;align-items:center;justify-content:center;vertical-align:1px}
 .panel-info .tooltip-label{display:none}
 .enemy-sticky-id{bottom:24px}
+
+
+/* 0.0.4U enemy polish */
+.tooltip-term::before{content:none!important}
+.tooltip-term:not(.panel-info)::after{content:none!important}
+.tooltip-term:not(.panel-info){text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#65547f;text-underline-offset:3px}
+.tooltip-term.panel-info::before{content:'ⓘ';display:inline-block;margin-right:0;font:700 10px Inter;color:#7b67a6;vertical-align:1px;text-decoration:none}
+.tooltip-term.panel-info .tooltip-label{display:none}
+.panel-info .tooltip-popup{font-family:Inter,ui-sans-serif,sans-serif;font-weight:500;text-transform:none!important;letter-spacing:0}
+.study-title-label{vertical-align:middle}
+.drop-item-link .tooltip-popup{font-family:Inter,ui-sans-serif,sans-serif;font-weight:500;text-transform:none!important}
+.detail-expand-title{display:flex;flex-direction:column;gap:4px;text-transform:none;letter-spacing:.06em}
+.detail-expand-title>span{font:700 11px Inter,ui-sans-serif,sans-serif;color:#c5b4e4;letter-spacing:.02em}
+.detail-expand-title>small{font:500 9px/1.5 Inter,ui-sans-serif,sans-serif;color:#68758a;letter-spacing:0;text-transform:none}
+.enemy-detail-top{grid-template-columns:170px minmax(0,1fr);gap:22px}
+.enemy-detail-top>div:last-child{padding-top:7px}
+.enemy-detail-art img[src*="Rat.png"]{width:82%;height:82%}
+.enemy-sticky-art img[src*="Rat.png"]{width:82%;height:82%}
+.enemy-sticky-art img{width:86%;height:86%;object-fit:contain}
+@media(max-width:760px){.enemy-detail-top{grid-template-columns:1fr}.enemy-detail-top>div:last-child{padding-top:0}.enemy-detail-art img[src*="Rat.png"]{width:82%;height:82%}}

@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4T",
+  "version": "0.0.4U",
   "lastUpdated": "2026-09-10",
-  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
+  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4U",
+      "date": "2026-09-11",
+      "changes": "Refined enemy tooltips and drop previews, fixed tooltip markup leakage, improved Study Description presentation, adjusted enemy header spacing, and improved Rat artwork padding in detail and sticky views."
+    },
     {
       "version": "0.0.4T",
       "date": "2026-09-10",
