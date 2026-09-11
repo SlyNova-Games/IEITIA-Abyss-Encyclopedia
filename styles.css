@@ -218,3 +218,16 @@ body.modal-open{overflow:hidden}
   .detail-expand-dialog{width:calc(100vw - 24px);max-height:84vh}
   .detail-expand-body{padding:15px}
 }
+
+/* v0.0.4T player-facing enemy UI polish */
+.enemy-detail-top > div:last-child{padding-top:2px}
+.enemy-detail-top .tag{margin-bottom:11px}
+.enemy-detail-top h1{margin:0 0 7px}
+.drop-item-link{color:#aeb9ca;text-decoration:none}
+.drop-item-link:hover{color:#fff}
+.drop-item-link .drop-name-text{text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#65547f;text-underline-offset:3px}
+.drop-item-link .tag{margin-left:0;flex:0 0 auto}
+.drop-item-link .tooltip-popup{text-transform:none!important}
+.panel-info{display:inline-flex;align-items:center;justify-content:center;vertical-align:1px}
+.panel-info .tooltip-label{display:none}
+.enemy-sticky-id{bottom:24px}

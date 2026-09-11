@@ -100,13 +100,12 @@ const detailTips={
   'Element':'The elemental type associated with the action. None means no element; Normal Attack Element uses the user\'s normal attack element.',
   'Variance':'The amount of random variation applied to the calculated damage or recovery amount.',
   'Critical Hit':'Whether the action can produce a critical hit.',
-  'Attack Element':"The elemental type used by this enemy's normal attacks.",
-  'Weaknesses': 'The enemy takes more damage from these elements. The percentage shown is how much extra damage it takes compared with normal damage.',
-
-  'Resistances':'The enemy takes less damage from these elements. The percentage shown is how much less damage it takes compared with normal damage.',
-  'Status Immunities':'States this enemy is completely immune to.',
-  'Status Rates':'The percentage shown is relative to the normal chance to apply the state. Below 100% means the enemy is more resistant; above 100% means the enemy is more susceptible.',
-  'Accuracy / Evasion':'Hit Rate is the enemy\'s chance to successfully land an attack. Evasion is the enemy\'s chance to avoid incoming attacks. The encyclopedia shows these as direct percentages.',
+  'Attack Element':"The element used by this enemy's normal attacks. It does not describe every skill the enemy can use.",
+  'Weaknesses': 'These elements deal extra damage to the enemy. A listed percentage shows how much more damage the enemy takes than normal.',
+  'Resistances':'These elements deal reduced damage to the enemy. A listed percentage shows how much less damage the enemy takes than normal.',
+  'Status Immunities':'Statuses this enemy is completely immune to.',
+  'Status Rates':'Shows how resistant or susceptible this enemy is to each status. 100% is normal; lower values mean more resistant, while higher values mean more susceptible.',
+  'Accuracy / Evasion':'Hit Rate is the chance this enemy\'s attack will hit. Evasion is the chance this enemy avoids an incoming attack. For example, 93% Hit Rate means a 93% chance to hit, while +3% Evasion means a 3% chance to evade.',
   'MP Cost':'The amount of MP consumed when the action is used.',
   'EP Cost':'The amount of EP consumed when the action is used.',
   'EP Gain':'The amount of EP gained when the action is used.',
@@ -205,7 +204,7 @@ function enemyTraits(e){
     if(c===31) attack.push(systemName('elements',d));
     else if(c===11 && v>1.001) weak.push(`${systemName('elements',d)} +${ratePct(v)-100}% Weak`);
     else if(c===11 && v<0.999) resist.push(`${systemName('elements',d)} ${100-ratePct(v)}% Resistant`);
-    else if(c===13 && Math.abs(v-1)>0.0001){const pct=ratePct(v);statusRates.push(`${stateName(d)} ${pct<100?100-pct+'% Resistant':pct>100?'+'+(pct-100)+'% Susceptible':'Normal'}`)}
+    else if(c===13 && Math.abs(v-1)>0.0001){const pct=ratePct(v);statusRates.push(`${stateName(d)} ${pct<100?100-pct+'% Resistant':pct>100?(pct-100)+'% Susceptible':'Normal'}`)}
     else if(c===14) statusRes.push(stateName(d));
     else if(c===22 && Math.abs(v)>0.0001){
       const label=xparamName(d),pct=ratePct(v);
@@ -259,8 +258,9 @@ function dropTooltip(d){
 }
 function dropLink(d){
   const item=d.item, tip=dropTooltip(d);
-  const tier=(d.type==='weapons'||d.type==='armors')&&parseRarity(item.note)!=null?`<span class="drop-tier">${esc(rarity[parseRarity(item.note)][0])} · T${parseRarity(item.note)}</span>`:'';
-  return `<a class="drop-item-link tooltip-term" href="#${d.type}/${encodeURIComponent(item.id)}" tabindex="0">${icon(item.iconIndex)}<span class="drop-item-name">${esc(item.name)}${tier}</span><span class="tooltip-popup">${esc(tip)}</span></a>`;
+  const r=(d.type==='weapons'||d.type==='armors')?parseRarity(item.note):null;
+  const tier=r!=null?rarityTag(r):'';
+  return `<a class="drop-item-link" href="#${d.type}/${encodeURIComponent(item.id)}" tabindex="0" data-tooltip-drop="1">${icon(item.iconIndex)}<span class="drop-item-name"><span class="drop-name-text">${esc(item.name)}</span>${tier}</span><span class="tooltip-popup">${esc(tip)}</span></a>`;
 }
 function enemyDetail(e){
   const cat=enemyCategory(e), p=e.params||[], img=enemyImage(e), skills=enemySkillEntries(e), drops=enemyDropEntries(e), extraDrops=enemyExtraDrops(e), conditionalDrops=enemyConditionalDrops(e), growth=enemyGrowth(e), traits=enemyTraits(e);
@@ -275,7 +275,7 @@ function enemyDetail(e){
   const growthHtml=growth.length?`<div class="data-list growth-list">${growth.map(([l,v])=>`<div class="data-row"><span class="data-label">${esc(l)}</span><span class="data-value">${esc(v)}</span></div>`).join('')}</div>`:'<p class="detail-description">No growth rates recorded.</p>';
   const study=enemyStudy(e);
   const stickyImg=img?`<img src="${img}" alt="">`:icon(e.iconIndex);
-  return `<div class="enemy-detail-shell">${sideNavHtml('enemies',e)}<div class="detail-page fade"><a class="back" href="#enemies">← Back to Enemy Bestiary</a><div class="detail-top enemy-detail-top"><div class="detail-art enemy-detail-art">${img?`<img src="${img}" alt="${esc(e.name)}">`:icon(e.iconIndex)}</div><div><div>${enemyTag(cat)}</div><h1>${esc(e.name)}</h1></div></div><div class="detail-layout"><section class="panel"><div class="panel-title">Stats <span class="panel-hint">Fixed scale · visual reference</span></div>${stats}<div class="fact-grid"><div class="fact"><strong>${Number(e.exp??0)}</strong><small>EXP</small></div><div class="fact"><strong>${Number(e.gold??0)}</strong><small>Gold</small></div><div class="fact"><strong>${esc(levelRange(e))}</strong><small>Level Range</small></div></div></section><section class="panel"><div class="panel-title">Traits</div>${traitHtml}</section><section class="panel"><div class="panel-title">Drops</div>${dropHtml}${extraHtml}${conditionalHtml}</section><section class="panel"><div class="panel-title">Growth Rates</div>${growthHtml}</section><section class="panel enemy-expandable study-panel" data-expand="study"><div class="panel-title">Study Description ${tipSpan('ⓘ',"When you use the Study ability on this enemy, this is the description recorded in its Study Log.",'tooltip-term panel-info')}</div>${study?`<div class="expandable-scroll"><p class="detail-description">${esc(study)}</p></div>`:'<div class="expandable-scroll"><p class="detail-description">No study description recorded.</p></div>'}</section><section class="panel enemy-expandable skills-panel" data-expand="skills"><div class="panel-title">Skills <span class="panel-count">${skills.length}</span></div><div class="skill-list">${skillHtml}</div></section></div></div><div class="enemy-sticky-id" aria-hidden="true"><div class="enemy-sticky-art">${stickyImg}</div><strong>${esc(e.name)}</strong></div><div class="detail-expand-modal" id="detailExpandModal" aria-hidden="true"><div class="detail-expand-backdrop"></div><div class="detail-expand-dialog" role="dialog" aria-modal="true"><button class="detail-expand-close" type="button" aria-label="Close expanded view">×</button><div class="detail-expand-title"></div><div class="detail-expand-body"></div></div></div></div>`;
+  return `<div class="enemy-detail-shell">${sideNavHtml('enemies',e)}<div class="detail-page fade"><a class="back" href="#enemies">← Back to Enemy Bestiary</a><div class="detail-top enemy-detail-top"><div class="detail-art enemy-detail-art">${img?`<img src="${img}" alt="${esc(e.name)}">`:icon(e.iconIndex)}</div><div><div>${enemyTag(cat)}</div><h1>${esc(e.name)}</h1></div></div><div class="detail-layout"><section class="panel"><div class="panel-title">Stats <span class="panel-hint">Fixed scale · visual reference</span></div>${stats}<div class="fact-grid"><div class="fact"><strong>${Number(e.exp??0)}</strong><small>EXP</small></div><div class="fact"><strong>${Number(e.gold??0)}</strong><small>Gold</small></div><div class="fact"><strong>${esc(levelRange(e))}</strong><small>Level Range</small></div></div></section><section class="panel"><div class="panel-title">Traits</div>${traitHtml}</section><section class="panel"><div class="panel-title">Drops</div>${dropHtml}${extraHtml}${conditionalHtml}</section><section class="panel"><div class="panel-title">Growth Rates</div>${growthHtml}</section><section class="panel enemy-expandable study-panel" data-expand="study"><div class="panel-title">Study Description ${tipSpan('',"When you use the Study ability on this enemy, this is the description recorded in its Study Log.",'tooltip-term panel-info')}</div>${study?`<div class="expandable-scroll"><p class="detail-description">${esc(study)}</p></div>`:'<div class="expandable-scroll"><p class="detail-description">No study description recorded.</p></div>'}</section><section class="panel enemy-expandable skills-panel" data-expand="skills"><div class="panel-title">Skills <span class="panel-count">${skills.length}</span></div><div class="skill-list">${skillHtml}</div></section></div></div><div class="enemy-sticky-id" aria-hidden="true"><div class="enemy-sticky-art">${stickyImg}</div><strong>${esc(e.name)}</strong></div><div class="detail-expand-modal" id="detailExpandModal" aria-hidden="true"><div class="detail-expand-backdrop"></div><div class="detail-expand-dialog" role="dialog" aria-modal="true"><button class="detail-expand-close" type="button" aria-label="Close expanded view">×</button><div class="detail-expand-title"></div><div class="detail-expand-body"></div></div></div></div>`;
 }
 
 function genericDetail(type,x){if(type==='actors')return actorDetail(x);const r=(type==='weapons'||type==='armors')?parseRarity(x.note):null;let body='';let displayDescription=cleanText(x.description)||'No player-facing description recorded.';if(type==='weapons'||type==='armors'){body=`<section class="panel"><div class="panel-title">Parameters</div>${paramRows(x)}</section>${equipmentDetailGroups(type,x,r)}${equipmentEffects(x)}`}else if(type==='items'){body=`${itemDetailGroups(x)}<section class="panel"><div class="panel-title">Effects</div><p class="detail-description">${esc(itemEffectSummary(x))}</p></section>`}else if(type==='skills'){const sp=skillDescriptionParts(x);displayDescription=sp.description||'No player-facing description recorded.';body=`${skillDetailGroups(x)}<section class="panel"><div class="panel-title">Effects</div><p class="detail-description">${esc(itemEffectSummary(x))}</p></section>`}else{body=`<section class="panel"><div class="panel-title">Entry Details</div><p class="detail-description">Player-facing details for this entry.</p></section>`}return `<div class="detail-shell">${sideNavHtml(type,x)}<div class="detail-page fade"><a class="back" href="#${type}">← Back to ${typeTitle(type)}</a><div class="detail-top"><div class="detail-art">${detailArt(type,x)}</div><div><div>${(type==='weapons'||type==='armors')?rarityTag(r):`<span class="tag">${type==='items'?itemCategories[itemCategory(x.id)]?.[0]||'Item':type==='skills'?'Player Skill':typeTitle(type)}</span>`}</div><h1>${esc(x.name)}</h1><p class="detail-description item-detail-description">${esc(displayDescription)}</p></div></div><div class="detail-layout">${body}</div></div></div>`}
@@ -307,16 +307,26 @@ async function load(){
 function bindGlobal(){const form=$('#globalSearch');if(form)form.onsubmit=e=>{e.preventDefault();const q=$('#globalSearchInput').value.trim();if(q)location.hash='#search/'+encodeURIComponent(q)}}
 function bindAccess(){const s=$('#spoilerToggle');if(s)s.onclick=()=>{localStorage.setItem('ie-spoilers',spoilerEnabled()?'off':'on');route()};document.querySelectorAll('[data-zoom]').forEach(b=>b.onclick=()=>{localStorage.setItem('ie-text-zoom',b.dataset.zoom);route()});}
 function bindCardRoutes(){document.querySelectorAll('.card-link').forEach(c=>c.addEventListener('click',e=>{const href=c.getAttribute('href');if(!href||!href.startsWith('#'))return;e.preventDefault();const target=href.slice(1);if(location.hash.slice(1)===target)route();else location.hash=target;}))}
-function route(){const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()})}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
+function route(){document.body.classList.remove('modal-open');const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()})}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
 function bindEnemySticky(){
   const top=document.querySelector('.enemy-detail-top'), sticky=document.querySelector('.enemy-sticky-id'), footer=document.querySelector('.footer');
   if(!top||!sticky||!('IntersectionObserver' in window))return;
-  let topVisible=true, footerVisible=false;
-  const update=()=>sticky.classList.toggle('visible',!topVisible&&!footerVisible);
+  let topVisible=true;
+  const setBottom=()=>{
+    if(!footer){sticky.style.bottom='24px';return;}
+    const r=footer.getBoundingClientRect();
+    const footerInView=r.top<window.innerHeight;
+    const bottom=footerInView?Math.max(24,window.innerHeight-r.top+12):24;
+    sticky.style.bottom=`${bottom}px`;
+  };
+  const update=()=>{sticky.classList.toggle('visible',!topVisible);setBottom()};
   const observer=new IntersectionObserver(entries=>{topVisible=entries[0].isIntersecting;update()},{threshold:0});
   observer.observe(top);
-  if(footer){const footerObserver=new IntersectionObserver(entries=>{footerVisible=entries[0].isIntersecting;update()},{threshold:0});footerObserver.observe(footer)}
+  window.addEventListener('scroll',setBottom,{passive:true});
+  window.addEventListener('resize',setBottom);
+  setBottom();
 }
+
 function bindEnemyExpand(){
   const modal=$('#detailExpandModal');
   if(!modal)return;
@@ -330,7 +340,7 @@ function bindEnemyExpand(){
     const clone=panel.cloneNode(true);
     clone.querySelector('.panel-title')?.remove();
     clone.querySelectorAll('[data-tooltip]').forEach(x=>x.removeAttribute('data-tooltip'));
-    title.textContent=heading?.textContent?.trim()||'';
+    title.textContent=heading?.textContent?.replace(/ⓘ/g,'').trim()||'';
     body.innerHTML=clone.innerHTML;
     modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
   }));
