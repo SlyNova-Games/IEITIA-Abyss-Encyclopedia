@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4O",
+  "version": "0.0.4P",
   "lastUpdated": "2026-09-10",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -14,9 +14,9 @@
   },
   "versionHistory": [
     {
-      "version": "0.0.4O",
+      "version": "0.0.4P",
       "date": "2026-09-10",
-      "changes": "Refined spoiler behavior and guidance; limited spoilers to bosses, mini-bosses, Legendary, and Mythic equipment; expanded enemy traits, drops, conditional drops, and growth rates; standardized enemy stat bars and improved enemy page spacing."
+      "changes": "Fixed the spoiler-card error and restored spoiler hover guidance; limited spoilers to bosses, mini-bosses, Legendary, and Mythic equipment; expanded enemy traits, drops, conditional drops, and growth rates; standardized enemy stat bars and improved enemy page spacing."
     },
     {
       "version": "0.0.4N",
