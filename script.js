@@ -101,11 +101,11 @@ const detailTips={
   'Variance':'The amount of random variation applied to the calculated damage or recovery amount.',
   'Critical Hit':'Whether the action can produce a critical hit.',
   'Attack Element':"The element used by this enemy's normal/basic attacks.",
-  'Weaknesses':'Elements with a rate above 100% cause more damage to this enemy.',
-  'Resistances':'Elements with a rate below 100% cause less damage to this enemy.',
+  'Weaknesses':'Element damage is multiplied by this rate. 100% is normal; values above 100% mean the enemy takes more damage from that element.',
+  'Resistances':'Element damage is multiplied by this rate. 100% is normal; values below 100% mean the enemy takes less damage from that element.',
   'Status Immunities':'States this enemy is completely immune to.',
-  'Status Rates':'100% is the normal chance. Below 100% means the enemy is more resistant; above 100% means the enemy is more susceptible.',
-  'Accuracy / Evasion':'Hit Rate affects how often attacks connect. Evasion affects how often this enemy avoids attacks. A positive Evasion value is shown as +% Evasion.',
+  'Status Rates':'100% is the normal chance. Below 100% means the enemy is more resistant to the state; above 100% means the enemy is more susceptible to it.',
+  'Accuracy / Evasion':'Hit Rate is the enemy\'s chance to successfully land an attack. Evasion is the chance for this enemy to avoid an attack. For both, 100% is the normal reference value in RPG Maker, while this encyclopedia displays the resulting percentage directly.',
   'MP Cost':'The amount of MP consumed when the action is used.',
   'EP Cost':'The amount of EP consumed when the action is used.',
   'EP Gain':'The amount of EP gained when the action is used.',
@@ -116,7 +116,6 @@ const detailTips={
   'Consumable':'Whether one copy of the item is consumed when it is used.',
   'Weapon Type':'The weapon category assigned to this weapon.',
   'Armor Type':'The armor category assigned to this equipment.',
-  'Attack Element':'The element added to the user\'s normal attacks while this equipment is active.',
   'Required Weapon':'The weapon type required to use this skill.',
   'Required Weapon 2':'A second weapon type that can satisfy this skill\'s weapon requirement.'
 };
@@ -183,9 +182,9 @@ function enemyConditionalDrops(e){
     let condition=`Variable ${m[2]} ${m[3]} ${m[4]}`;
     if(String(m[2])==='60'){
       const threshold=Number(m[4]);
-      if(m[3]==='>=' && threshold===5) condition='Tension Level is 4 or greater';
-      else if(m[3]==='>' && threshold===4) condition='Tension Level is greater than 4';
-      else condition=`Tension Level ${m[3]} ${Math.max(0,threshold-1)}`;
+      if(m[3]==='>=' && threshold===5) condition='Ascension Level is 4 or greater';
+      else if(m[3]==='>' && threshold===4) condition='Ascension Level is greater than 4';
+      else condition=`Ascension Level ${m[3]} ${Math.max(0,threshold-1)}`;
     }
     rows.push({name:cleanText(m[1]),condition,bonus:m[5]});
   }
@@ -207,10 +206,12 @@ function enemyTraits(e){
     else if(c===11 && v<0.999) resist.push(`${systemName('elements',d)} ${rateText(v)}`);
     else if(c===13 && Math.abs(v-1)>0.0001) statusRates.push(`${stateName(d)} ${rateText(v)}${v<1?' (Resistant)':v>1?' (Susceptible)':''}`);
     else if(c===14) statusRes.push(stateName(d));
-    else if(c===22 && Math.abs(v-1)>0.0001){
+    else if(c===22 && Math.abs(v)>0.0001){
       const label=xparamName(d);
-      const pct=Math.round((v-1)*100);
-      xparams.push(`${label} ${pct>0?'+':''}${pct}%`);
+      const pct=Math.round(v*100);
+      if(label==='Hit Rate') xparams.push(`${label} ${pct}%`);
+      else if(label==='Evasion') xparams.push(`${label} ${pct>0?'+':''}${pct}%`);
+      else xparams.push(`${label} ${pct>0?'+':''}${pct}%`);
     }
   }
   const rows=[];
@@ -254,7 +255,7 @@ function enemyDetail(e){
   const growthHtml=growth.length?`<div class="data-list growth-list">${growth.map(([l,v])=>`<div class="data-row"><span class="data-label">${esc(l)}</span><span class="data-value">${esc(v)}</span></div>`).join('')}</div>`:'<p class="detail-description">No growth rates recorded.</p>';
   const study=enemyStudy(e);
   const stickyImg=img?`<img src="${img}" alt="">`:icon(e.iconIndex);
-  return `<div class="enemy-detail-shell">${sideNavHtml('enemies',e)}<div class="detail-page fade"><a class="back" href="#enemies">← Back to Enemy Bestiary</a><div class="detail-top enemy-detail-top"><div class="detail-art enemy-detail-art">${img?`<img src="${img}" alt="${esc(e.name)}">`:icon(e.iconIndex)}</div><div><div>${enemyTag(cat)}</div><h1>${esc(e.name)}</h1></div></div><div class="enemy-sticky-id" aria-hidden="true"><div class="enemy-sticky-art">${stickyImg}</div><strong>${esc(e.name)}</strong></div><div class="detail-layout"><section class="panel"><div class="panel-title">Stats <span class="panel-hint">Fixed scale · visual reference</span></div>${stats}<div class="fact-grid"><div class="fact"><strong>${Number(e.exp??0)}</strong><small>EXP</small></div><div class="fact"><strong>${Number(e.gold??0)}</strong><small>Gold</small></div><div class="fact"><strong>${esc(levelRange(e))}</strong><small>Level Range</small></div></div></section><section class="panel"><div class="panel-title">Traits</div>${traitHtml}</section><section class="panel"><div class="panel-title">Drops</div>${dropHtml}${extraHtml}${conditionalHtml}</section><section class="panel"><div class="panel-title">Growth Rates</div>${growthHtml}</section><section class="panel"><div class="panel-title">Skills <span class="panel-count">${skills.length}</span></div><div class="skill-list">${skillHtml}</div></section><section class="panel"><div class="panel-title">Study Description <span class="tooltip-term panel-info" data-tooltip="When you use the Study ability on this enemy, this is the description recorded in its Study Log.">?</span></div>${study?`<p class="detail-description">${esc(study)}</p>`:'<p class="detail-description">No study description recorded.</p>'}</section></div></div></div>`;
+  return `<div class="enemy-detail-shell">${sideNavHtml('enemies',e)}<div class="detail-page fade"><a class="back" href="#enemies">← Back to Enemy Bestiary</a><div class="detail-top enemy-detail-top"><div class="detail-art enemy-detail-art">${img?`<img src="${img}" alt="${esc(e.name)}">`:icon(e.iconIndex)}</div><div><div>${enemyTag(cat)}</div><h1>${esc(e.name)}</h1></div></div><div class="enemy-sticky-id" aria-hidden="true"><div class="enemy-sticky-art">${stickyImg}</div><strong>${esc(e.name)}</strong></div><div class="detail-layout"><section class="panel"><div class="panel-title">Stats <span class="panel-hint">Fixed scale · visual reference</span></div>${stats}<div class="fact-grid"><div class="fact"><strong>${Number(e.exp??0)}</strong><small>EXP</small></div><div class="fact"><strong>${Number(e.gold??0)}</strong><small>Gold</small></div><div class="fact"><strong>${esc(levelRange(e))}</strong><small>Level Range</small></div></div></section><section class="panel"><div class="panel-title">Traits</div>${traitHtml}</section><section class="panel"><div class="panel-title">Drops</div>${dropHtml}${extraHtml}${conditionalHtml}</section><section class="panel"><div class="panel-title">Growth Rates</div>${growthHtml}</section><section class="panel"><div class="panel-title">Study Description ${tipSpan('?',"When you use the Study ability on this enemy, this is the description recorded in its Study Log.",'tooltip-term panel-info')}</div>${study?`<p class="detail-description">${esc(study)}</p>`:'<p class="detail-description">No study description recorded.</p>'}</section><section class="panel"><div class="panel-title">Skills <span class="panel-count">${skills.length}</span></div><div class="skill-list">${skillHtml}</div></section></div></div></div>`;
 }
 
 function genericDetail(type,x){if(type==='actors')return actorDetail(x);const r=(type==='weapons'||type==='armors')?parseRarity(x.note):null;let body='';let displayDescription=cleanText(x.description)||'No player-facing description recorded.';if(type==='weapons'||type==='armors'){body=`<section class="panel"><div class="panel-title">Parameters</div>${paramRows(x)}</section>${equipmentDetailGroups(type,x,r)}${equipmentEffects(x)}`}else if(type==='items'){body=`${itemDetailGroups(x)}<section class="panel"><div class="panel-title">Effects</div><p class="detail-description">${esc(itemEffectSummary(x))}</p></section>`}else if(type==='skills'){const sp=skillDescriptionParts(x);displayDescription=sp.description||'No player-facing description recorded.';body=`${skillDetailGroups(x)}<section class="panel"><div class="panel-title">Effects</div><p class="detail-description">${esc(itemEffectSummary(x))}</p></section>`}else{body=`<section class="panel"><div class="panel-title">Entry Details</div><p class="detail-description">Player-facing details for this entry.</p></section>`}return `<div class="detail-shell">${sideNavHtml(type,x)}<div class="detail-page fade"><a class="back" href="#${type}">← Back to ${typeTitle(type)}</a><div class="detail-top"><div class="detail-art">${detailArt(type,x)}</div><div><div>${(type==='weapons'||type==='armors')?rarityTag(r):`<span class="tag">${type==='items'?itemCategories[itemCategory(x.id)]?.[0]||'Item':type==='skills'?'Player Skill':typeTitle(type)}</span>`}</div><h1>${esc(x.name)}</h1><p class="detail-description item-detail-description">${esc(displayDescription)}</p></div></div><div class="detail-layout">${body}</div></div></div>`}
@@ -288,10 +289,13 @@ function bindAccess(){const s=$('#spoilerToggle');if(s)s.onclick=()=>{localStora
 function bindCardRoutes(){document.querySelectorAll('.card-link').forEach(c=>c.addEventListener('click',e=>{const href=c.getAttribute('href');if(!href||!href.startsWith('#'))return;e.preventDefault();const target=href.slice(1);if(location.hash.slice(1)===target)route();else location.hash=target;}))}
 function route(){const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()})}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0)}}
 function bindEnemySticky(){
-  const top=document.querySelector('.enemy-detail-top'), sticky=document.querySelector('.enemy-sticky-id');
+  const top=document.querySelector('.enemy-detail-top'), sticky=document.querySelector('.enemy-sticky-id'), footer=document.querySelector('.footer');
   if(!top||!sticky||!('IntersectionObserver' in window))return;
-  const observer=new IntersectionObserver(entries=>{sticky.classList.toggle('visible',!entries[0].isIntersecting)},{threshold:0});
+  let topVisible=true, footerVisible=false;
+  const update=()=>sticky.classList.toggle('visible',!topVisible&&!footerVisible);
+  const observer=new IntersectionObserver(entries=>{topVisible=entries[0].isIntersecting;update()},{threshold:0});
   observer.observe(top);
+  if(footer){const footerObserver=new IntersectionObserver(entries=>{footerVisible=entries[0].isIntersecting;update()},{threshold:0});footerObserver.observe(footer)}
 }
 function animateBars(){document.querySelectorAll('.bar-fill').forEach((b,i)=>requestAnimationFrame(()=>setTimeout(()=>b.style.width=b.dataset.width,i*45)))}
 window.addEventListener('hashchange',route);load();

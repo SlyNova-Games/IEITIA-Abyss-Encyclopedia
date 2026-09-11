@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4Q",
+  "version": "0.0.4R",
   "lastUpdated": "2026-09-10",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -14,7 +14,7 @@
   },
   "versionHistory": [
     {
-      "version": "0.0.4Q",
+      "version": "0.0.4R",
       "date": "2026-09-10",
       "changes": "Refined enemy trait terminology and Tension Level conditional drops; added study-description guidance and skill counts; added previous/next navigation to all entry pages; added a scroll-aware enemy identity badge and clearer stat-row hover highlighting."
     },
