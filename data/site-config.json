@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4Z",
+  "version": "0.0.4AA",
   "lastUpdated": "2026-09-11",
-  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
+  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AA",
+      "date": "2026-09-11",
+      "changes": "Corrected fixed Previous/Next placement in the outer gutters and added a player-facing Help & FAQ guide for navigation, search, enemy pages, terminology, spoilers, and accessibility."
+    },
     {
       "version": "0.0.4Z",
       "date": "2026-09-11",
