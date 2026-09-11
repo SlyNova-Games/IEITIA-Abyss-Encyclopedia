@@ -319,12 +319,20 @@ function bindAccess(){
   const s=$('#spoilerToggle');
   if(s)s.onclick=()=>{localStorage.setItem('ie-spoilers',spoilerEnabled()?'off':'on');route()};
   document.querySelectorAll('[data-zoom]').forEach(b=>b.onclick=()=>{localStorage.setItem('ie-text-zoom',b.dataset.zoom);route()});
-  const dock=document.querySelector('.access-dock'), footer=document.querySelector('.footer'), topBtn=document.querySelector('#backToTop');
+  const dock=document.querySelector('.access-dock'), footer=document.querySelector('.footer'), topBtn=document.querySelector('#backToTop'), sticky=document.querySelector('.enemy-sticky-id');
   const setFloatingBottoms=()=>{
     const footerTop=footer?footer.getBoundingClientRect().top:window.innerHeight+1000;
     const footerOffset=footerTop<window.innerHeight?Math.max(0,window.innerHeight-footerTop+10):0;
     if(dock)dock.style.bottom=`${Math.max(14,14+footerOffset)}px`;
-    if(topBtn)topBtn.style.bottom=`${Math.max(24,84+footerOffset)}px`;
+    if(topBtn){
+      let bottom=24;
+      if(sticky && sticky.classList.contains('visible')){
+        const stickyTop=sticky.getBoundingClientRect().top;
+        bottom=Math.max(24,window.innerHeight-stickyTop+12);
+      }
+      if(footerOffset)bottom=Math.max(bottom,24+footerOffset);
+      topBtn.style.bottom=`${bottom}px`;
+    }
   };
   if(dock||topBtn){setFloatingBottoms();window.addEventListener('scroll',setFloatingBottoms,{passive:true});window.addEventListener('resize',setFloatingBottoms)}
   if(topBtn){

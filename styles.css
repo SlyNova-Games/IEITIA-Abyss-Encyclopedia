@@ -410,3 +410,40 @@ body.modal-open{overflow:hidden}
   .detail-side-nav{position:relative;top:auto;transform:none;}
   .detail-prev,.detail-next{left:auto;right:auto;}
 }
+
+
+/* 0.0.4Z navigation + floating UI polish */
+/* Detail navigation is centered vertically and kept in the outer gutters of the
+   content area, which begins after the 225px sidebar. */
+.detail-side-nav{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:85;
+}
+.detail-prev{left:calc(50% - 590px - 154.5px);}
+.detail-next{right:calc(50% - 590px - 154.5px);}
+.detail-side-nav:hover{transform:translateY(-50%);}
+
+/* Use the bottom-right corner by default. The script moves this upward only
+   when an enemy identity badge needs the space. */
+.back-to-top{right:24px;bottom:24px;}
+
+/* Subsections in the enemy Drops panel use a subtle purple divider so they
+   read as distinct sections without becoming visually heavy. */
+.subpanel-title{
+  border-top:1px solid rgba(140,98,255,.30);
+  box-shadow:inset 0 1px 0 rgba(140,98,255,.045);
+  color:#7b6a9f;
+}
+
+@media(max-width:1050px){
+  .detail-prev{left:230px;}
+  .detail-next{right:12px;}
+}
+@media(max-width:760px){
+  .detail-side-nav{position:relative;top:auto;transform:none;}
+  .detail-prev,.detail-next{left:auto;right:auto;}
+  .detail-side-nav:hover{transform:none;}
+  .back-to-top{right:12px;bottom:24px;}
+}

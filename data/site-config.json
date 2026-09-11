@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4Y",
+  "version": "0.0.4Z",
   "lastUpdated": "2026-09-11",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4Z",
+      "date": "2026-09-11",
+      "changes": "Centered previous/next detail navigation in the outer gutters, refined Back to Top placement around enemy identity badges, and added subtle purple dividers for enemy drop subsections."
+    },
     {
       "version": "0.0.4Y",
       "date": "2026-09-11",
