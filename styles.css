@@ -375,3 +375,38 @@ body.modal-open{overflow:hidden}
   .detail-side-nav:hover{transform:none;}
   .back-to-top{right:12px;bottom:72px;}
 }
+
+/* 0.0.4Y interaction + navigation polish */
+.detail-side-nav{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:85;
+}
+/* Keep detail navigation in the gutters outside the content panel. */
+.detail-prev{left:calc(50% - 590px - 42px);}
+.detail-next{right:calc(50% - 590px - 42px);}
+.detail-side-nav:hover{transform:translateY(-50%);}
+.panel-info{cursor:help;}
+.panel-info .tooltip-popup{width:max-content;min-width:0;max-width:min(360px,calc(100vw - 32px));white-space:normal;}
+.panel-info .tooltip-primary{display:block;}
+.panel-info .tooltip-action{display:block;margin-top:8px;padding-top:7px;border-top:1px solid #252d3d;color:#776d8f;font-style:italic;}
+.skills-panel .skill-card,
+.detail-expand-body .skill-card{transform:none;}
+.skills-panel .skill-card:hover,
+.skills-panel .skill-card:focus-visible,
+.detail-expand-body .skill-card:hover,
+.detail-expand-body .skill-card:focus-visible{transform:none;}
+.skills-panel .skill-card:hover h4,
+.skills-panel .skill-card:focus-visible h4,
+.detail-expand-body .skill-card:hover h4,
+.detail-expand-body .skill-card:focus-visible h4{color:#e3d9f4;}
+.back-to-top[data-tooltip]::after{width:max-content;min-width:0;max-width:180px;white-space:nowrap;}
+@media(max-width:1050px){
+  .detail-prev{left:230px;}
+  .detail-next{right:12px;}
+}
+@media(max-width:760px){
+  .detail-side-nav{position:relative;top:auto;transform:none;}
+  .detail-prev,.detail-next{left:auto;right:auto;}
+}
