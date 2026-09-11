@@ -277,3 +277,19 @@ body.modal-open{overflow:hidden}
 .enemy-sticky-art img{width:100%;height:100%;object-fit:contain;object-position:center;}
 .enemy-sticky-id{padding:8px 11px 8px 8px;}
 @media(max-width:760px){.enemy-detail-top{gap:18px}.enemy-sticky-art{width:42px;height:42px;flex-basis:42px}.drop-name-text[data-drop-tooltip] .tooltip-popup{max-width:min(310px,calc(100vw - 24px));}}
+
+/* 0.0.4W enemy header + interaction polish */
+.enemy-detail-top{grid-template-columns:145px minmax(0,1fr);gap:18px;align-items:start;}
+.enemy-detail-top>div:last-child{padding-top:5px;}
+.enemy-header-copy{min-width:0;}
+.enemy-header-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.enemy-header-meta .tag{margin:0;}
+.enemy-zone-tag{color:#9a88c7;border-color:#3b3154;background:#121020;}
+.enemy-detail-top h1{margin:8px 0 7px;}
+.enemy-detail-art img[src*="Rat.png"]{width:76%;height:76%;object-fit:contain;object-position:center center;transform:translateY(-1px);}
+.enemy-sticky-art img[src*="Rat.png"]{width:76%;height:76%;object-fit:contain;object-position:center center;transform:translateY(-1px);}
+.enemy-sticky-art img{width:84%;height:84%;object-fit:contain;object-position:center;}
+.skills-panel .panel-title,.study-panel .panel-title{display:flex;align-items:center;gap:6px;}
+.skills-panel .panel-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin:0;font:700 8px/1 Inter,sans-serif;color:#9c7fda;background:#21183a;border:1px solid #46326f;border-radius:999px;vertical-align:middle;}
+.skills-panel .panel-info,.study-panel .panel-info{margin-left:1px;flex:0 0 15px;}
+@media(max-width:760px){.enemy-detail-top{grid-template-columns:1fr;gap:18px}.enemy-detail-top>div:last-child{padding-top:0}.enemy-detail-art img[src*="Rat.png"]{width:76%;height:76%;}}

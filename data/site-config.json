@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4V",
+  "version": "0.0.4W",
   "lastUpdated": "2026-09-10",
   "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4W",
+      "date": "2026-09-10",
+      "changes": "Refined enemy header metadata, restored Study/Skills interaction cues, and polished enemy artwork alignment."
+    },
     {
       "version": "0.0.4V",
       "date": "2026-09-11",
