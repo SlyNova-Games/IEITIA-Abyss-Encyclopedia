@@ -2,8 +2,8 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4W",
-  "lastUpdated": "2026-09-10",
+  "version": "0.0.4X",
+  "lastUpdated": "2026-09-11",
   "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4X",
+      "date": "2026-09-11",
+      "changes": "Restored Study/Skills eye interaction cues, fixed skill hover feedback, added fixed side navigation and Back to Top control, and standardized Ascension Level conditional-drop wording."
+    },
     {
       "version": "0.0.4W",
       "date": "2026-09-10",
