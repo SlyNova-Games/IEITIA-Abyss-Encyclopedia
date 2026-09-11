@@ -476,7 +476,52 @@ body.modal-open{overflow:hidden}
 .enemy-detail-shell>.detail-prev,.detail-prev{left:max(12px,calc(225px + (100vw - 225px - 1180px)/2 - 106px))}
 .enemy-detail-shell>.detail-next,.detail-next{right:max(12px,calc((100vw - 225px - 1180px)/2 - 106px))}
 .detail-side-nav:hover{transform:translateY(-50%)}
-.extra-drop:not(:last-of-type),.conditional-drop:not(:last-of-type){border-bottom:1px solid rgba(140,98,255,.22)}
-.subpanel-title + .extra-drop:last-child,.subpanel-title + .conditional-drop:last-child{border-bottom:0}
 @media(max-width:1050px){.enemy-detail-shell>.detail-prev,.detail-prev{left:230px}.enemy-detail-shell>.detail-next,.detail-next{right:12px}}
 @media(max-width:760px){.list-tool-controls{width:100%;justify-content:space-between}.filter-wrap,.sort-wrap{flex:1}.filter-select,.sort-select{width:100%}.enemy-detail-shell>.detail-side-nav,.detail-side-nav{position:relative;top:auto;transform:none}.enemy-detail-shell>.detail-prev,.enemy-detail-shell>.detail-next,.detail-prev,.detail-next{left:auto;right:auto}.detail-side-nav:hover{transform:none}}
+
+
+/* v0.0.4AC fixes: neutral drop dividers, true last-entry cleanup,
+   fixed-width outer detail navigation, and contextual skill filtering. */
+.extra-drop:not(:last-child),
+.conditional-drop:not(:last-child){border-bottom:1px solid #171f2d;}
+.extra-drop:last-child,
+.conditional-drop:last-child{border-bottom:0;}
+
+/* Keep the navigation in the outer gutter regardless of text zoom. */
+@media(min-width:1051px){
+  .enemy-detail-shell>.detail-side-nav,
+  .detail-shell>.detail-side-nav{
+    position:fixed;
+    top:50%;
+    width:108px;
+    min-width:108px;
+    max-width:108px;
+    box-sizing:border-box;
+    overflow:hidden;
+    transform:translateY(-50%);
+    z-index:85;
+  }
+  .enemy-detail-shell>.detail-prev,
+  .detail-shell>.detail-prev{
+    left:calc(225px + max(0px, (100vw - 225px - 1180px)/2) - 126px);
+  }
+  .enemy-detail-shell>.detail-next,
+  .detail-shell>.detail-next{
+    right:max(0px, (100vw - 225px - 1180px)/2 - 126px);
+  }
+  .enemy-detail-shell>.detail-side-nav:hover,
+  .detail-shell>.detail-side-nav:hover{transform:translateY(-50%);}
+  .detail-side-nav strong{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+}
+@media(max-width:1050px) and (min-width:761px){
+  .enemy-detail-shell>.detail-side-nav,
+  .detail-shell>.detail-side-nav{position:fixed;top:50%;width:92px;min-width:92px;max-width:92px;transform:translateY(-50%);z-index:85;overflow:hidden;}
+  .enemy-detail-shell>.detail-prev,
+  .detail-shell>.detail-prev{left:112px;}
+  .enemy-detail-shell>.detail-next,
+  .detail-shell>.detail-next{right:12px;}
+  .detail-side-nav strong{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+}
+@media(max-width:760px){
+  .enemy-detail-shell>.detail-side-nav,.detail-shell>.detail-side-nav{position:relative;top:auto;transform:none;width:auto;min-width:0;max-width:none;overflow:visible;}
+}

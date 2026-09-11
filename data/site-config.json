@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AB",
+  "version": "0.0.4AC",
   "lastUpdated": "2026-09-11",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AC",
+      "date": "2026-09-11",
+      "changes": "Fixed final-entry dividers in Additional Drops and Conditional Drops, restored neutral gray dividers, pushed Previous/Next navigation farther into the outer gutters with fixed-width positioning for text-size changes, and removed the redundant skill filter dropdown."
+    },
     {
       "version": "0.0.4AB",
       "date": "2026-09-11",

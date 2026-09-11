@@ -50,7 +50,7 @@ function filterControls(type){
   if(type==='weapons')opts.push(...(system.weaponTypes||[]).map((n,i)=>n?[`weapon:${i}`,n]:null).filter(Boolean));
   else if(type==='armors'){opts.push(...(system.armorTypes||[]).map((n,i)=>n?[`armor:${i}`,n]:null).filter(Boolean));opts.push(['passive','Passive Equipment']);}
   else if(type==='items')opts.push(...Object.entries(itemCategories).map(([k,v])=>[k,v[0]]));
-  else if(type==='skills')opts.push(['hero','Hero Skills'],['dog','Dog Skills'],['willy','Willy Skills']);
+  else if(type==='skills')return '';
   else if(type==='actors')opts.push(['protagonist','Protagonist'],['partner','Partners']);
   else if(type==='states')opts.push(['described','With Descriptions'],['undescribed','Without Descriptions']);
   else return '';
@@ -291,8 +291,8 @@ function enemyDetail(e){
   const traitHtml=traits.length?`<div class="data-list">${traits.map(([l,v])=>`<div class="data-row"><span class="data-label">${tipSpan(l,detailTips[l]||'','tooltip-term')}</span><span class="data-value">${esc(v)}</span></div>`).join('')}</div>`:'<p class="detail-description">No notable traits recorded.</p>';
   const skillHtml=skills.length?skills.map(s=>`<a class="skill-card linked-card" href="#skills/${encodeURIComponent(s.id)}"><h4>${esc(s.name)}</h4><p>${esc(cleanText(s.description)||'View this skill for more details.')}</p></a>`).join(''):'<p class="detail-description">No known skills recorded.</p>';
   const dropHtml=drops.length?drops.map(d=>`<div class="drop-row"><span>${d.chance}%</span>${dropLink(d)}<span class="drop-kind">${d.type==='items'?'Item':d.type==='weapons'?'Weapon':'Armor'}</span></div>`).join(''):'<p class="detail-description">No drops recorded.</p>';
-  const extraHtml=extraDrops.length?`<div class="subpanel-title">Additional Drops</div>${extraDrops.map(d=>`<div class="extra-drop"><span>${esc(d.name)}</span><b>${d.chance}%</b></div>`).join('')}`:'';
-  const conditionalHtml=conditionalDrops.length?`<div class="subpanel-title">Conditional Drops</div>${conditionalDrops.map(d=>`<div class="conditional-drop"><b>${esc(d.name)}</b><span>+${esc(d.bonus)}% when ${esc(d.condition)}</span></div>`).join('')}`:'';
+  const extraHtml=extraDrops.length?`<div class="subpanel-title">Additional Drops</div><div class="drop-sublist extra-drop-list">${extraDrops.map(d=>`<div class="extra-drop"><span>${esc(d.name)}</span><b>${d.chance}%</b></div>`).join('')}</div>`:'';
+  const conditionalHtml=conditionalDrops.length?`<div class="subpanel-title">Conditional Drops</div><div class="drop-sublist conditional-drop-list">${conditionalDrops.map(d=>`<div class="conditional-drop"><b>${esc(d.name)}</b><span>+${esc(d.bonus)}% when ${esc(d.condition)}</span></div>`).join('')}</div>`:'';
   const growthHtml=growth.length?`<div class="data-list growth-list">${growth.map(([l,v])=>`<div class="data-row"><span class="data-label">${esc(l)}</span><span class="data-value">${esc(v)}</span></div>`).join('')}</div>`:'<p class="detail-description">No growth rates recorded.</p>';
   const study=enemyStudy(e);
   const stickyImg=img?`<img src="${img}" alt="">`:icon(e.iconIndex);
