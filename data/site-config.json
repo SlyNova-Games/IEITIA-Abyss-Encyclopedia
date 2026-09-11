@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AA",
+  "version": "0.0.4AB",
   "lastUpdated": "2026-09-11",
-  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
+  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AB",
+      "date": "2026-09-11",
+      "changes": "Refined detail navigation placement, added player-facing list filters alongside sorting, expanded enemy cards to show HP, ATK, DEF, M.ATK, and M.DEF, and cleaned up drop-section dividers."
+    },
     {
       "version": "0.0.4AA",
       "date": "2026-09-11",

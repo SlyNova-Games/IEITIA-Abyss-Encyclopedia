@@ -466,3 +466,17 @@ body.modal-open{overflow:hidden}
 .help-entry p{margin:0;padding:0 12px 12px;color:#7f8ca0;font-size:10px;line-height:1.65;}
 @media(max-width:1050px){.help-grid{grid-template-columns:1fr;}.detail-prev{left:12px;}.detail-next{right:12px;}}
 @media(max-width:760px){.help-grid{grid-template-columns:1fr;}.detail-side-nav{position:relative;top:auto;transform:none;}.detail-prev,.detail-next{left:auto;right:auto;}.detail-side-nav:hover{transform:none;}}
+
+/* v0.0.4AB list filters, detail gutter navigation, and drop divider cleanup */
+.list-tool-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.filter-wrap,.sort-wrap{display:flex;align-items:center;gap:7px;color:#68768b;font:600 8px JetBrains Mono;letter-spacing:.08em}
+.filter-select,.sort-select{border:1px solid #263149;background:#0d131f;color:#aeb9ca;border-radius:7px;padding:7px 26px 7px 9px;font:600 9px Inter,sans-serif;outline:none;cursor:pointer}
+.filter-select:hover,.filter-select:focus,.sort-select:hover,.sort-select:focus{border-color:#51417c;color:#e0d8ee}
+.enemy-detail-shell>.detail-side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:85}
+.enemy-detail-shell>.detail-prev,.detail-prev{left:max(12px,calc(225px + (100vw - 225px - 1180px)/2 - 106px))}
+.enemy-detail-shell>.detail-next,.detail-next{right:max(12px,calc((100vw - 225px - 1180px)/2 - 106px))}
+.detail-side-nav:hover{transform:translateY(-50%)}
+.extra-drop:not(:last-of-type),.conditional-drop:not(:last-of-type){border-bottom:1px solid rgba(140,98,255,.22)}
+.subpanel-title + .extra-drop:last-child,.subpanel-title + .conditional-drop:last-child{border-bottom:0}
+@media(max-width:1050px){.enemy-detail-shell>.detail-prev,.detail-prev{left:230px}.enemy-detail-shell>.detail-next,.detail-next{right:12px}}
+@media(max-width:760px){.list-tool-controls{width:100%;justify-content:space-between}.filter-wrap,.sort-wrap{flex:1}.filter-select,.sort-select{width:100%}.enemy-detail-shell>.detail-side-nav,.detail-side-nav{position:relative;top:auto;transform:none}.enemy-detail-shell>.detail-prev,.enemy-detail-shell>.detail-next,.detail-prev,.detail-next{left:auto;right:auto}.detail-side-nav:hover{transform:none}}
