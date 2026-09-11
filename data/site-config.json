@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4U",
+  "version": "0.0.4V",
   "lastUpdated": "2026-09-10",
   "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4V",
+      "date": "2026-09-11",
+      "changes": "Refined enemy interaction cues and player-facing trait tooltips; restored eye indicators for expandable Study and Skills panels; simplified equipment drop previews; added compact parameter badges and italicized full-detail guidance; tightened drop hover targets; improved enemy header and sticky identity spacing; and kept the accessibility dock above the footer."
+    },
     {
       "version": "0.0.4U",
       "date": "2026-09-11",
