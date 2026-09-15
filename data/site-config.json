@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AM",
+  "version": "0.0.4AN",
   "lastUpdated": "2026-09-15",
-  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
+  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AN",
+      "date": "2026-09-15",
+      "changes": "Added stat-bar hover details showing the exact Level Preview and Ascension contributions, kept Ascension 4 as a starting-level change without double-counting level growth, and refined preview readability."
+    },
     {
       "version": "0.0.4AM",
       "date": "2026-09-15",
