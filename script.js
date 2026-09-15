@@ -67,11 +67,15 @@ function stateFilterKind(x){
 }
 function enemyZones(){return [...new Set(usedEnemies().map(e=>cleanText(noteTag(e.note,'Tattle Category'))).filter(Boolean))].sort((a,b)=>a.localeCompare(b))}
 function skillElements(){return [...new Set(allPublicSkills().map(s=>Number(s.damage?.elementId)).filter(n=>Number.isFinite(n)&&n>=0).map(n=>elementLabel(n)))].sort((a,b)=>a.localeCompare(b))}
+function skillTargets(){const map={1:'One Enemy',2:'All Enemies',7:'One Ally',11:'Self'};return [...new Set(allPublicSkills().map(s=>Number(s.scope)).filter(Number.isFinite))].sort((a,b)=>a-b).map(n=>[String(n),map[n]||'Other'])}
+function skillActionCommands(){const labels={'circle':'Circle','wheel':'Wheel','mash':'Mash','clock':'Clock','arrows':'Arrows'};return [...new Set(allPublicSkills().map(s=>noteValue(s.note,'Timed Attack').toLowerCase()).filter(Boolean))].filter(k=>labels[k]).sort((a,b)=>labels[a].localeCompare(labels[b])).map(k=>[k,labels[k]])}
 function filterSelect(id,label,opts){return `<div class="filter-wrap">${label} <select class="filter-select" id="${id}" data-filter-key="${id}">${opts.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`}
 function filterControls(type){
   if(type==='skills'){
     const elements=skillElements();
-    return `${filterSelect('skillType','TYPE',[['all','All Types'],['physical','Physical'],['magical','Magical'],['certain','Certain Hit']])}${filterSelect('skillElement','ELEMENT',[['all','All Elements'],...elements.map(v=>[v,v])])}${filterSelect('skillEffect','EFFECT',[['all','All Effects'],['damage','Damage'],['recovery','Recovery'],['drain','Drain'],['status','Status / Effect'],['utility','Utility']])}${filterSelect('skillCost','COST',[['all','Any Cost'],['mp','MP'],['ep','EP'],['mp-ep','MP + EP'],['hp','HP'],['none','No Cost']])}${filterSelect('skillCooldown','COOLDOWN',[['all','Any Cooldown'],['none','No Cooldown'],['has','Has Cooldown']])}`;
+    const targets=skillTargets();
+    const commands=skillActionCommands();
+    return `${filterSelect('skillType','TYPE',[['all','All Types'],['physical','Physical'],['magical','Magical'],['certain','Certain Hit']])}${filterSelect('skillElement','ELEMENT',[['all','All Elements'],...elements.map(v=>[v,v])])}${filterSelect('skillEffect','EFFECT',[['all','All Effects'],['damage','Damage'],['recovery','Recovery'],['drain','Drain'],['status','Status / Effect'],['utility','Utility']])}${filterSelect('skillCost','COST',[['all','Any Cost'],['mp','MP'],['ep','EP'],['mp-ep','MP + EP'],['hp','HP'],['none','No Cost']])}${filterSelect('skillCooldown','COOLDOWN',[['all','Any Cooldown'],['none','No Cooldown'],['has','Has Cooldown']])}${filterSelect('skillTarget','TARGET',[['all','Any Target'],...targets])}${filterSelect('skillCommand','ACTION',[['all','Any Action Command'],['none','No Action Command'],...commands])}`;
   }
   if(type==='enemies'){
     const zones=enemyZones();
@@ -86,7 +90,7 @@ function filterControls(type){
   else return '';
   return filterSelect('filterSelect','FILTER',opts);
 }
-function listPage(type,title,desc,filters){return shell(type,`<div class="page-head fade"><div><div class="page-kicker">Field Codex</div><h1 class="page-title">${title}</h1><p class="page-desc">${desc}</p></div><input class="search" id="search" placeholder="Search ${title.toLowerCase()}..." /></div>${filters?`<div class="filters" id="filters">${filters.map((f,i)=>`<button class="filter ${i===0?'active':''} ${f[2]?'filter-disabled':''}" data-filter="${esc(f[0])}" ${f[2]?'disabled data-tooltip="No recorded entries yet."':''}>${esc(f[1])}</button>`).join('')}</div>`:''}<div class="list-tools"><span class="count" id="count"></span><div class="list-tool-controls">${filterControls(type)}${sortControls(type)}</div></div><div class="grid fade" id="cards"></div>`)}
+function listPage(type,title,desc,filters){return shell(type,`<div class="page-head fade"><div><div class="page-kicker">Field Codex</div><h1 class="page-title">${title}</h1><p class="page-desc">${desc}</p></div><input class="search" id="search" placeholder="Search ${title.toLowerCase()}..." /></div>${filters?`<div class="filters" id="filters">${filters.map((f,i)=>`<button class="filter ${i===0?'active':''} ${f[2]?'filter-disabled':''}" data-filter="${esc(f[0])}" ${f[2]?'disabled data-tooltip="No recorded entries yet."':''}>${esc(f[1])}</button>`).join('')}</div>`:''}<div class="list-tools"><span class="count" id="count"></span><div class="list-tool-controls">${filterControls(type)}<button class="clear-filters" id="clearFilters" type="button" data-tooltip="Reset filters, search, and sorting to the default view.">CLEAR FILTERS</button>${sortControls(type)}</div></div><div class="grid fade" id="cards"></div>`)}
 function skillCardMeta(x){const hit=hitTypeLabel(x.hitType);const element=elementLabel(x.damage?.elementId);const cd=noteValue(x.note,'Cooldown');const costs=[];if(Number(x.hpCost||0))costs.push(`<span class="cost-hp">${esc(x.hpCost)} HP</span>`);if(Number(x.mpCost||0))costs.push(`<span class="cost-mp">${esc(x.mpCost)} MP</span>`);if(Number(x.tpCost||0))costs.push(`<span class="cost-ep">${esc(x.tpCost)} EP</span>`);const hitClass=String(hit).toLowerCase()==='physical'?'meta-physical':String(hit).toLowerCase()==='magical'?'meta-magical':'';const rows=[`<span class="skill-meta-item ${hitClass}"><b>TYPE</b>${esc(hit)}</span>`,`<span class="skill-meta-item"><b>ELEMENT</b>${esc(element)}</span>`];if(cd!=='')rows.push(`<span class="skill-meta-item meta-cooldown"><b>COOLDOWN</b>${esc(cd)} turn${Number(cd)===1?'':'s'}</span>`);if(costs.length)rows.push(`<span class="skill-meta-item meta-cost"><b>COST</b>${costs.join(' / ')}</span>`);return `<div class="skill-meta">${rows.join('')}</div>`}
 function card(type,x){
 if(type==='enemies'){const c=enemyCategory(x),p=x.params||[];return `<a class="card card-link ${isSpoiler(x,'enemies')?'spoiler-hidden':''}"${spoilerAttrs(x,'enemies')} data-id="${x.id}" href="#enemies/${encodeURIComponent(x.id)}"><div class="topline">${enemyTag(c)}<span class="zone">${esc(noteTag(x.note,'Tattle Category')||'UNASSIGNED ZONE')}</span></div><div class="enemy-card-copy"><h3>${esc(x.name)}</h3><p>${esc(cleanText(noteTag(x.note,'Info')).slice(0,125)||'Study entry available.')}</p><div class="statline"><span>HP <b>${p[0]??0}</b></span><span>ATK <b>${p[2]??0}</b></span><span>DEF <b>${p[3]??0}</b></span><span>M.ATK <b>${p[4]??0}</b></span><span>M.DEF <b>${p[5]??0}</b></span><span class="lv">LV ${levelRange(x)}</span></div></div><img class="enemy-art" src="assets/enemies_src/${encodeURIComponent(x.battlerName||'')}.png" onerror="this.style.display='none'" alt=""></a>`}
@@ -116,12 +120,14 @@ function renderList(type){
   if(type==='items'){if(active&&active!=='all')arr=arr.filter(x=>itemCategory(x.id)===active);const extra=$('#filterSelect')?.value||'all';if(extra!=='all')arr=arr.filter(x=>itemCategory(x.id)===extra)}
   if(type==='skills'){
     if(active&&active!=='all')arr=arr.filter(x=>skillCategory(x.id)===active);
-    const typeFilter=$('#skillType')?.value||'all',elementFilter=$('#skillElement')?.value||'all',effectFilter=$('#skillEffect')?.value||'all',costFilter=$('#skillCost')?.value||'all',cdFilter=$('#skillCooldown')?.value||'all';
+    const typeFilter=$('#skillType')?.value||'all',elementFilter=$('#skillElement')?.value||'all',effectFilter=$('#skillEffect')?.value||'all',costFilter=$('#skillCost')?.value||'all',cdFilter=$('#skillCooldown')?.value||'all',targetFilter=$('#skillTarget')?.value||'all',commandFilter=$('#skillCommand')?.value||'all';
     if(typeFilter!=='all')arr=arr.filter(x=>{const h=Number(x.hitType);return typeFilter==='physical'?h===1:typeFilter==='magical'?h===2:h===0});
     if(elementFilter!=='all')arr=arr.filter(x=>elementLabel(x.damage?.elementId)===elementFilter);
     if(effectFilter!=='all')arr=arr.filter(x=>skillEffectKind(x)===effectFilter);
     if(costFilter!=='all')arr=arr.filter(x=>{const hp=Number(x.hpCost||0)>0,mp=Number(x.mpCost||0)>0,ep=Number(x.tpCost||0)>0;if(costFilter==='mp')return mp&&!ep&&!hp;if(costFilter==='ep')return ep&&!mp&&!hp;if(costFilter==='mp-ep')return mp&&ep&&!hp;if(costFilter==='hp')return hp;if(costFilter==='none')return !hp&&!mp&&!ep;return false});
     if(cdFilter!=='all')arr=arr.filter(x=>{const cd=Number(noteValue(x.note,'Cooldown')||0);return cdFilter==='has'?cd>0:cd===0});
+    if(targetFilter!=='all')arr=arr.filter(x=>String(Number(x.scope))===targetFilter);
+    if(commandFilter!=='all')arr=arr.filter(x=>{const command=noteValue(x.note,'Timed Attack').toLowerCase();return commandFilter==='none'?!command:command===commandFilter});
   }
   if(type==='actors'){const extra=$('#filterSelect')?.value||'all';if(extra!=='all')arr=arr.filter(x=>extra==='protagonist'?x.name==='Roy':['Dog','Willy'].includes(x.name))}
   if(type==='states'){const kind=$('#stateKind')?.value||'all';if(kind!=='all')arr=arr.filter(x=>stateFilterKind(x)===kind)}
@@ -411,17 +417,21 @@ function bindAccess(){
   }
 }
 function bindCardRoutes(){document.querySelectorAll('.card-link').forEach(c=>c.addEventListener('click',e=>{const href=c.getAttribute('href');if(!href||!href.startsWith('#'))return;e.preventDefault();const target=href.slice(1);if(location.hash.slice(1)===target)route();else location.hash=target;}))}
-function route(){document.body.classList.remove('modal-open');const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();bindDetailSideNav();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter-select').forEach(el=>el.addEventListener('change',()=>{renderList(base);bindCardRoutes()}));document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()})}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
+function resetListControls(base){const search=$('#search'),sort=$('#sort');if(search)search.value='';if(sort)sort.value='name-az';document.querySelectorAll('.filter').forEach((b,i)=>b.classList.toggle('active',i===0));document.querySelectorAll('.filter-select').forEach(el=>el.value='all');renderList(base);bindCardRoutes()}
+function route(){document.body.classList.remove('modal-open');const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();bindDetailSideNav();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter-select').forEach(el=>el.addEventListener('change',()=>{renderList(base);bindCardRoutes()}));document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()});$('#clearFilters')?.addEventListener('click',()=>resetListControls(base))}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
 function bindDetailSideNav(){
   const shell=document.querySelector('.enemy-detail-shell,.detail-shell'), page=shell?.querySelector('.detail-page'), prev=shell?.querySelector('.detail-prev'), next=shell?.querySelector('.detail-next');
   if(!shell||!page||!prev||!next)return;
   const position=()=>{
     if(window.innerWidth<=760){prev.style.cssText='';next.style.cssText='';return;}
-    const r=page.getBoundingClientRect(), width=108, gap=16;
-    prev.style.position='fixed';prev.style.width=`${width}px`;prev.style.minWidth=`${width}px`;prev.style.maxWidth=`${width}px`;prev.style.left=`${Math.max(8,r.left-width-gap)}px`;prev.style.right='auto';prev.style.top='50%';prev.style.transform='translateY(-50%)';
-    next.style.position='fixed';next.style.width=`${width}px`;next.style.minWidth=`${width}px`;next.style.maxWidth=`${width}px`;next.style.right=`${Math.max(8,window.innerWidth-r.right-width-gap)}px`;next.style.left='auto';next.style.top='50%';next.style.transform='translateY(-50%)';
+    const zoom=Math.max(0.1,parseFloat(getComputedStyle(document.body).zoom)||1);
+    const r=page.getBoundingClientRect(), width=108, gap=16, desiredTop=150;
+    const left=Math.max(8,(r.left-width-gap)/zoom), right=Math.max(8,(window.innerWidth-r.right-width-gap)/zoom), top=desiredTop/zoom;
+    [prev,next].forEach(el=>{el.style.position='fixed';el.style.width=`${width}px`;el.style.minWidth=`${width}px`;el.style.maxWidth=`${width}px`;el.style.top=`${top}px`;el.style.transform='none';el.style.boxSizing='border-box';el.style.overflow='hidden';});
+    prev.style.left=`${left}px`;prev.style.right='auto';
+    next.style.right=`${right}px`;next.style.left='auto';
   };
-  position();window.addEventListener('resize',position);window.addEventListener('scroll',position,{passive:true});
+  position();window.addEventListener('resize',position);
 }
 
 function bindEnemySticky(){

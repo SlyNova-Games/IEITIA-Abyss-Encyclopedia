@@ -539,3 +539,41 @@ body.modal-open{overflow:hidden}
   .filter-wrap,.sort-wrap{flex:1;min-width:0}
   .filter-select,.sort-select{width:100%;max-width:none}
 }
+
+
+/* v0.0.4AE: stable top-positioned detail navigation + universal filter reset */
+@media(min-width:1051px){
+  .detail-side-nav{
+    position:fixed !important;
+    top:142px !important;
+    transform:none !important;
+    width:108px !important;
+    min-width:108px !important;
+    max-width:108px !important;
+    box-sizing:border-box;
+    overflow:hidden;
+    z-index:85;
+  }
+  .detail-prev{left:calc(225px + max(0px,(100vw - 225px - 1180px)/2) - 145px) !important;right:auto !important;}
+  .detail-next{right:max(0px,(100vw - 225px - 1180px)/2 - 145px) !important;left:auto !important;}
+  .detail-side-nav:hover{transform:none !important;}
+  .detail-side-nav strong{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+}
+.clear-filters{border:1px solid #293449;background:#0d121d;color:#7f8ca1;border-radius:6px;padding:7px 10px;font:600 10px Inter,sans-serif;cursor:pointer;white-space:nowrap;}
+.clear-filters:hover,.clear-filters:focus-visible{color:#fff;border-color:#57468a;background:#17152a;outline:none;}
+.clear-filters[data-tooltip]::after{width:max-content;min-width:260px;max-width:320px;}
+@media(max-width:1050px) and (min-width:761px){
+  .detail-side-nav{position:fixed !important;top:120px !important;transform:none !important;width:92px !important;min-width:92px !important;max-width:92px !important;}
+  .detail-prev{left:112px !important;right:auto !important;}
+  .detail-next{right:12px !important;left:auto !important;}
+  .detail-side-nav:hover{transform:none !important;}
+}
+@media(max-width:760px){.clear-filters{flex:0 0 auto}.detail-side-nav{position:relative !important;top:auto !important;transform:none !important;}}
+
+
+/* v0.0.4AF: Previous/Next use a stable upper-gutter position.
+   JS accounts for the site's accessibility zoom and only recalculates on route/resize. */
+@media(min-width:761px){
+  .detail-side-nav{position:fixed !important;top:150px !important;transform:none !important;z-index:85;}
+  .detail-side-nav:hover{transform:none !important;}
+}

@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AD",
-  "lastUpdated": "2026-09-11",
-  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
+  "version": "0.0.4AF",
+  "lastUpdated": "2026-09-14",
+  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,16 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AF",
+      "date": "2026-09-14",
+      "changes": "Moved Previous/Next detail navigation to a stable upper-gutter position that stays fixed while scrolling and remains aligned across accessibility text sizes; added a universal Clear Filters reset and expanded skill filters with target and Action Command options."
+    },
+    {
+      "version": "0.0.4AE",
+      "date": "2026-09-14",
+      "changes": "Stabilized Previous/Next detail navigation at a fixed top position, added a universal Clear Filters control, and expanded skill filtering with target and Action Command filters."
+    },
     {
       "version": "0.0.4AD",
       "date": "2026-09-14",
