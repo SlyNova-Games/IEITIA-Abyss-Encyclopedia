@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AI",
+  "version": "0.0.4AJ",
   "lastUpdated": "2026-09-15",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AJ",
+      "date": "2026-09-15",
+      "changes": "Corrected Ascension 1 to grant +1 ATK instead of +1 HP, separated note-defined enemy growth rates from plugin defaults in the Growth Rates panel, added player-facing Ascension preview details, refined preview text colors, and compacted the sidebar so the rarity explanation remains visible."
+    },
     {
       "version": "0.0.4AI",
       "date": "2026-09-15",
@@ -199,5 +204,6 @@
       "changes": "Project setup."
     }
   ],
-  "spoilers": {}
+  "spoilers": {},
+  "date": null
 }

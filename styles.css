@@ -671,3 +671,36 @@ body.modal-open{overflow:hidden}
 .ascension-number{width:32px;height:32px;border:1px solid #4b3b6b;border-radius:8px;display:grid;place-items:center;background:#151126;color:#c8b6ef;font:700 12px JetBrains Mono}
 .ascension-note{margin-top:14px}
 @media(max-width:760px){.fact-grid{grid-template-columns:1fr 1fr}.ascension-grid{grid-template-columns:1fr}}
+
+/* v0.0.4AJ: enemy preview accuracy, player-facing growth display, and compact sidebar */
+.level-preview-only .stat-value{color:#e5bf55}
+.level-preview-only .growth-list .data-value{color:#e5bf55}
+.level-preview-only .growth-list .data-label{color:#8c7a5b}
+.level-preview-only .fact[data-reward] strong{color:#e5bf55}
+.ascension-preview-active .stat-value{color:#73c9d6}
+.ascension-preview-active .growth-list .data-value{color:#73c9d6}
+.ascension-preview-active .growth-list .data-label{color:#4f7f87}
+.ascension-preview-active .fact[data-reward] strong{color:#73c9d6}
+.ascension-picker{position:relative;min-width:108px}
+.ascension-trigger{width:100%;text-align:left;position:relative;padding-right:25px}
+.ascension-trigger:after{content:'▾';position:absolute;right:9px;color:#6eb5c2}
+.ascension-menu{display:none;position:absolute;right:0;top:calc(100% + 5px);width:270px;z-index:60;padding:5px;border:1px solid #30464c;border-radius:8px;background:#0c1418;box-shadow:0 14px 30px rgba(0,0,0,.42)}
+.ascension-picker.open .ascension-menu{display:grid;gap:2px}
+.ascension-option{display:grid;gap:3px;width:100%;padding:8px 9px;border:0;border-radius:6px;background:transparent;color:#c9d7dc;text-align:left;cursor:pointer;font:600 9px JetBrains Mono}
+.ascension-option:hover,.ascension-option.active{background:#17262a;color:#fff}
+.ascension-option small{font:500 8px Inter;color:#6f858b;line-height:1.35}
+.ascension-option:hover small,.ascension-option.active small{color:#8fbcc3}
+
+/* Keep the rarity explanation visible beside the accessibility dock at comfortable text size. */
+.sidebar{padding-bottom:12px}
+.side-links{gap:1px;margin-bottom:20px}
+.side-links a{padding:6px 9px;font-size:11px}
+.side-links a:hover,.side-links a.active{padding-left:7px}
+.rarity-list{gap:3px}
+.rarity-row{font-size:9px;padding:2px 0}
+.sidebar-note{font-size:8px;line-height:1.45;margin-top:12px;margin-bottom:0}
+
+@media(max-width:760px){
+  .ascension-picker{width:100%}
+  .ascension-menu{width:100%;left:0;right:auto}
+}
