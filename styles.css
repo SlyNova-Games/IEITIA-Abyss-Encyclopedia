@@ -709,3 +709,10 @@ body.modal-open{overflow:hidden}
 .ascension-preview-active .fact[data-reward] strong,.ascension-preview-active .growth-list .data-value{color:#73c9d6}
 .ascension-preview-active .growth-list .data-label{color:#4f7f87}
 .ascension-preview-active.level-preview-only .stat-value{color:#73c9d6}
+
+/* v0.0.4AL: sidebar readability while preserving the rarity explanation */
+.side-links a{font-size:12.25px;line-height:1.15;padding:4.5px 9px}
+.side-links a:hover,.side-links a.active{padding-left:7px}
+.rarity-list{gap:2px}
+.rarity-row{font-size:8.25px;padding:1.5px 0}
+.sidebar-note{font-size:7.35px;line-height:1.35;margin-top:8px}
