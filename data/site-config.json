@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AG",
-  "lastUpdated": "2026-09-14",
-  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
+  "version": "0.0.4AH",
+  "lastUpdated": "2026-09-15",
+  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AH",
+      "date": "2026-09-15",
+      "changes": "Added enemy level previews based on Yanfly Enemy Levels v1.09, including calculated stat growth, XP and Gold rewards, additive growth bar overlays, highlighted preview values, Abyss Essence rewards, and player-facing effective level ranges."
+    },
     {
       "version": "0.0.4AG",
       "date": "2026-09-14",

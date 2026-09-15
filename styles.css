@@ -633,3 +633,25 @@ body.modal-open{overflow:hidden}
   max-width:none !important;
   white-space:nowrap !important;
 }
+
+/* v0.0.4AH enemy level preview */
+.enemy-stats-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.enemy-level-preview{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-4px 0 12px;padding:9px 10px;border:1px solid #28223c;background:#100e19;border-radius:8px}
+.enemy-level-preview-copy{display:grid;gap:3px;min-width:0}
+.enemy-level-preview-copy>span:last-child{font-size:9px;color:#68758a;line-height:1.4}
+.enemy-level-preview-label{font:700 8px JetBrains Mono;color:#a995d0;letter-spacing:.1em}
+.enemy-level-select{min-width:108px;border:1px solid #4a3b6a;background:#151126;color:#d8d0e7;border-radius:6px;padding:7px 9px;font:600 9px JetBrains Mono;outline:none;cursor:pointer}
+.enemy-level-select:focus{border-color:#8064ad;box-shadow:0 0 0 2px rgba(128,100,173,.15)}
+.bar-track{position:relative}
+.bar-growth-fill{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:999px;background:linear-gradient(90deg,#d6a52d,#ffcf57);box-shadow:0 0 8px rgba(255,202,43,.28);transition:left .35s ease,width .45s cubic-bezier(.22,.72,0,1)}
+.level-preview-active .stat-value{color:#e5bf55}
+.level-preview-active .stat-name{color:#8c7a5b}
+.level-preview-active .growth-list .data-value{color:#e5bf55}
+.level-preview-active .growth-list .data-label{color:#8c7a5b}
+.level-preview-active .fact[data-reward] strong{color:#e5bf55}
+.enemy-level-preview:has(+ .stat-row){}
+@media(max-width:760px){
+  .enemy-level-preview{align-items:stretch;flex-direction:column}
+  .enemy-level-select{width:100%}
+  .enemy-stats-title{align-items:flex-start}
+}
