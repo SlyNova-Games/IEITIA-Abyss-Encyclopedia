@@ -45,16 +45,46 @@ function playableSkills(cat){return allPublicSkills().filter(s=>!cat||skillCateg
 function playableActors(){return (db.actors||[]).filter(a=>a&&['Roy','Dog','Willy'].includes(a.name))}
 function actorImage(a){const m={Roy:'Face_5 (Roy).png',Dog:'Face_6 (Dog).png',Willy:'Face_7 (Willy).png'};return m[a.name]?`assets/characters/${encodeURIComponent(m[a.name])}`:''}
 function sortControls(type){let options=type==='enemies'?['name-az','name-za','hp-high','hp-low']:type==='weapons'||type==='armors'?['tier-low','tier-high','name-az','name-za','price-low','price-high']:type==='skills'?['name-az','name-za','cooldown-low','cooldown-high','id-low','id-high']:['name-az','name-za','id-low','id-high'];const labels={'name-az':'Name A–Z','name-za':'Name Z–A','tier-low':'Tier Low → High','tier-high':'Tier High → Low','price-low':'Price Low → High','price-high':'Price High → Low','hp-high':'HP High → Low','hp-low':'HP Low → High','cooldown-low':'Cooldown Low → High','cooldown-high':'Cooldown High → Low','id-low':'ID Low → High','id-high':'ID High → Low'};return `<div class="sort-wrap">SORT <select class="sort-select" id="sort">${options.map(o=>`<option value="${o}">${labels[o]}</option>`).join('')}</select></div>`}
+function skillEffectKind(x){
+  const t=Number(x?.damage?.type||0);
+  if(t===1||t===2)return 'damage';
+  if(t===3||t===4)return 'recovery';
+  if(t===5||t===6)return 'drain';
+  if((x?.effects||[]).length)return 'status';
+  return 'utility';
+}
+function stateFilterKind(x){
+  const n=String(x?.name||'').toLowerCase(), note=String(x?.note||'').toLowerCase();
+  const traits=x?.traits||[];
+  if(/regeneration|regen|recover|healing|restore|gainhp\(\+|gainmp\(\+/.test(note+' '+n))return 'recovery';
+  if(/dot|damage over time|bleeding|burning|poison|gainhp\(-|hp regn -/.test(note+' '+n))return 'damage';
+  if(/debuff|down|lower|decrease|reduce/.test(note+' '+n)||traits.some(t=>(Number(t.code)===21||Number(t.code)===22||Number(t.code)===23)&&Number(t.value)<1))return 'debuff';
+  if(/buff|up|increase|boost|power|support/.test(note+' '+n)||traits.some(t=>(Number(t.code)===21||Number(t.code)===22||Number(t.code)===23)&&Number(t.value)>1))return 'buff';
+  if(Number(x?.restriction||0)>0||/stun|sleep|dizzy|blind|silence|confusion|paraly|frozen|fascinat|chill|immortal|knockout/.test(n))return 'control';
+  if(traits.some(t=>Number(t.code)===11||Number(t.code)===14)||/resist|immune|guard|protect|shield/.test(note+' '+n))return 'defensive';
+  if(/passive|equipment|orb|ring|heart|feather|medallion|suit/.test(note+' '+n))return 'passive';
+  return 'other';
+}
+function enemyZones(){return [...new Set(usedEnemies().map(e=>cleanText(noteTag(e.note,'Tattle Category'))).filter(Boolean))].sort((a,b)=>a.localeCompare(b))}
+function skillElements(){return [...new Set(allPublicSkills().map(s=>Number(s.damage?.elementId)).filter(n=>Number.isFinite(n)&&n>=0).map(n=>elementLabel(n)))].sort((a,b)=>a.localeCompare(b))}
+function filterSelect(id,label,opts){return `<div class="filter-wrap">${label} <select class="filter-select" id="${id}" data-filter-key="${id}">${opts.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`}
 function filterControls(type){
+  if(type==='skills'){
+    const elements=skillElements();
+    return `${filterSelect('skillType','TYPE',[['all','All Types'],['physical','Physical'],['magical','Magical'],['certain','Certain Hit']])}${filterSelect('skillElement','ELEMENT',[['all','All Elements'],...elements.map(v=>[v,v])])}${filterSelect('skillEffect','EFFECT',[['all','All Effects'],['damage','Damage'],['recovery','Recovery'],['drain','Drain'],['status','Status / Effect'],['utility','Utility']])}${filterSelect('skillCost','COST',[['all','Any Cost'],['mp','MP'],['ep','EP'],['mp-ep','MP + EP'],['hp','HP'],['none','No Cost']])}${filterSelect('skillCooldown','COOLDOWN',[['all','Any Cooldown'],['none','No Cooldown'],['has','Has Cooldown']])}`;
+  }
+  if(type==='enemies'){
+    const zones=enemyZones();
+    return zones.length?filterSelect('enemyZone','ZONE',[['all','All Zones'],...zones.map(v=>[v,v])]):'';
+  }
+  if(type==='states')return filterSelect('stateKind','TYPE',[['all','All Types'],['damage','Damage / DoT'],['recovery','Recovery / Regen'],['buff','Buff'],['debuff','Debuff'],['control','Control'],['defensive','Defensive / Resistance'],['passive','Passive / Equipment'],['other','Other']]);
   let opts=[['all','All']];
   if(type==='weapons')opts.push(...(system.weaponTypes||[]).map((n,i)=>n?[`weapon:${i}`,n]:null).filter(Boolean));
   else if(type==='armors'){opts.push(...(system.armorTypes||[]).map((n,i)=>n?[`armor:${i}`,n]:null).filter(Boolean));opts.push(['passive','Passive Equipment']);}
   else if(type==='items')opts.push(...Object.entries(itemCategories).map(([k,v])=>[k,v[0]]));
-  else if(type==='skills')return '';
   else if(type==='actors')opts.push(['protagonist','Protagonist'],['partner','Partners']);
-  else if(type==='states')opts.push(['described','With Descriptions'],['undescribed','Without Descriptions']);
   else return '';
-  return `<div class="filter-wrap">FILTER <select class="filter-select" id="filterSelect">${opts.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`;
+  return filterSelect('filterSelect','FILTER',opts);
 }
 function listPage(type,title,desc,filters){return shell(type,`<div class="page-head fade"><div><div class="page-kicker">Field Codex</div><h1 class="page-title">${title}</h1><p class="page-desc">${desc}</p></div><input class="search" id="search" placeholder="Search ${title.toLowerCase()}..." /></div>${filters?`<div class="filters" id="filters">${filters.map((f,i)=>`<button class="filter ${i===0?'active':''} ${f[2]?'filter-disabled':''}" data-filter="${esc(f[0])}" ${f[2]?'disabled data-tooltip="No recorded entries yet."':''}>${esc(f[1])}</button>`).join('')}</div>`:''}<div class="list-tools"><span class="count" id="count"></span><div class="list-tool-controls">${filterControls(type)}${sortControls(type)}</div></div><div class="grid fade" id="cards"></div>`)}
 function skillCardMeta(x){const hit=hitTypeLabel(x.hitType);const element=elementLabel(x.damage?.elementId);const cd=noteValue(x.note,'Cooldown');const costs=[];if(Number(x.hpCost||0))costs.push(`<span class="cost-hp">${esc(x.hpCost)} HP</span>`);if(Number(x.mpCost||0))costs.push(`<span class="cost-mp">${esc(x.mpCost)} MP</span>`);if(Number(x.tpCost||0))costs.push(`<span class="cost-ep">${esc(x.tpCost)} EP</span>`);const hitClass=String(hit).toLowerCase()==='physical'?'meta-physical':String(hit).toLowerCase()==='magical'?'meta-magical':'';const rows=[`<span class="skill-meta-item ${hitClass}"><b>TYPE</b>${esc(hit)}</span>`,`<span class="skill-meta-item"><b>ELEMENT</b>${esc(element)}</span>`];if(cd!=='')rows.push(`<span class="skill-meta-item meta-cooldown"><b>COOLDOWN</b>${esc(cd)} turn${Number(cd)===1?'':'s'}</span>`);if(costs.length)rows.push(`<span class="skill-meta-item meta-cost"><b>COST</b>${costs.join(' / ')}</span>`);return `<div class="skill-meta">${rows.join('')}</div>`}
@@ -72,7 +102,33 @@ function isSpoiler(x,type){
   return false
 }
 function spoilerAttrs(x,type){return isSpoiler(x,type)?' data-spoiler="SPOILER\nThis entry contains spoiler information.\nClick to view."':''}
-function renderList(type){const q=($('#search')?.value||'').toLowerCase();let arr=type==='enemies'?usedEnemies():type==='actors'?playableActors():type==='weapons'||type==='armors'?equipmentEntries(type):type==='items'?itemEntries():type==='skills'?allPublicSkills():validEntries(type);const active=$('.filter.active')?.dataset.filter;const extra=$('#filterSelect')?.value||'all';if(type==='enemies'&&active&&active!=='all')arr=arr.filter(e=>enemyCategory(e)===active);if(type==='weapons'||type==='armors'){if(active&&active!=='all'){if(type==='armors'&&active==='passive')arr=arr.filter(isPassiveArmor);else arr=arr.filter(x=>parseRarity(x.note)===Number(active))}if(extra!=='all'){if(extra==='passive')arr=arr.filter(isPassiveArmor);else if(extra.startsWith('weapon:'))arr=arr.filter(x=>Number(x.wtypeId)===Number(extra.split(':')[1]));else if(extra.startsWith('armor:'))arr=arr.filter(x=>Number(x.atypeId)===Number(extra.split(':')[1]))}}if(type==='items'&&active&&active!=='all')arr=arr.filter(x=>itemCategory(x.id)===active);if(type==='items'&&extra!=='all')arr=arr.filter(x=>itemCategory(x.id)===extra);if(type==='skills'&&active&&active!=='all')arr=arr.filter(x=>skillCategory(x.id)===active);if(type==='skills'&&extra!=='all')arr=arr.filter(x=>skillCategory(x.id)===extra);if(type==='actors'&&extra!=='all')arr=arr.filter(x=>extra==='protagonist'?x.name==='Roy':['Dog','Willy'].includes(x.name));if(type==='states'&&extra!=='all')arr=arr.filter(x=>extra==='described'?!!cleanText(x.description):!cleanText(x.description));arr=arr.filter(x=>`${x.name} ${cleanText(x.description)} ${cleanText(noteTag(x.note,'Info'))}`.toLowerCase().includes(q));const sort=$('#sort')?.value||'name-az';arr.sort((a,b)=>sorter(type,sort,a,b));$('#count').textContent=`${arr.length} entr${arr.length===1?'y':'ies'}`;$('#cards').innerHTML=arr.map(x=>card(type,x)).join('')||'<div class="empty">No matching entries.</div>'}
+function renderList(type){
+  const q=($('#search')?.value||'').toLowerCase();
+  let arr=type==='enemies'?usedEnemies():type==='actors'?playableActors():type==='weapons'||type==='armors'?equipmentEntries(type):type==='items'?itemEntries():type==='skills'?allPublicSkills():validEntries(type);
+  const active=$('.filter.active')?.dataset.filter;
+  if(type==='enemies'&&active&&active!=='all')arr=arr.filter(e=>enemyCategory(e)===active);
+  if(type==='enemies'){const zone=$('#enemyZone')?.value||'all';if(zone!=='all')arr=arr.filter(e=>cleanText(noteTag(e.note,'Tattle Category'))===zone)}
+  if(type==='weapons'||type==='armors'){
+    if(active&&active!=='all'){if(type==='armors'&&active==='passive')arr=arr.filter(isPassiveArmor);else arr=arr.filter(x=>parseRarity(x.note)===Number(active))}
+    const extra=$('#filterSelect')?.value||'all';
+    if(extra!=='all'){if(extra==='passive')arr=arr.filter(isPassiveArmor);else if(extra.startsWith('weapon:'))arr=arr.filter(x=>Number(x.wtypeId)===Number(extra.split(':')[1]));else if(extra.startsWith('armor:'))arr=arr.filter(x=>Number(x.atypeId)===Number(extra.split(':')[1]))}
+  }
+  if(type==='items'){if(active&&active!=='all')arr=arr.filter(x=>itemCategory(x.id)===active);const extra=$('#filterSelect')?.value||'all';if(extra!=='all')arr=arr.filter(x=>itemCategory(x.id)===extra)}
+  if(type==='skills'){
+    if(active&&active!=='all')arr=arr.filter(x=>skillCategory(x.id)===active);
+    const typeFilter=$('#skillType')?.value||'all',elementFilter=$('#skillElement')?.value||'all',effectFilter=$('#skillEffect')?.value||'all',costFilter=$('#skillCost')?.value||'all',cdFilter=$('#skillCooldown')?.value||'all';
+    if(typeFilter!=='all')arr=arr.filter(x=>{const h=Number(x.hitType);return typeFilter==='physical'?h===1:typeFilter==='magical'?h===2:h===0});
+    if(elementFilter!=='all')arr=arr.filter(x=>elementLabel(x.damage?.elementId)===elementFilter);
+    if(effectFilter!=='all')arr=arr.filter(x=>skillEffectKind(x)===effectFilter);
+    if(costFilter!=='all')arr=arr.filter(x=>{const hp=Number(x.hpCost||0)>0,mp=Number(x.mpCost||0)>0,ep=Number(x.tpCost||0)>0;if(costFilter==='mp')return mp&&!ep&&!hp;if(costFilter==='ep')return ep&&!mp&&!hp;if(costFilter==='mp-ep')return mp&&ep&&!hp;if(costFilter==='hp')return hp;if(costFilter==='none')return !hp&&!mp&&!ep;return false});
+    if(cdFilter!=='all')arr=arr.filter(x=>{const cd=Number(noteValue(x.note,'Cooldown')||0);return cdFilter==='has'?cd>0:cd===0});
+  }
+  if(type==='actors'){const extra=$('#filterSelect')?.value||'all';if(extra!=='all')arr=arr.filter(x=>extra==='protagonist'?x.name==='Roy':['Dog','Willy'].includes(x.name))}
+  if(type==='states'){const kind=$('#stateKind')?.value||'all';if(kind!=='all')arr=arr.filter(x=>stateFilterKind(x)===kind)}
+  arr=arr.filter(x=>`${x.name} ${cleanText(x.description)} ${cleanText(noteTag(x.note,'Info'))}`.toLowerCase().includes(q));
+  const sort=$('#sort')?.value||'name-az';arr.sort((a,b)=>sorter(type,sort,a,b));
+  $('#count').textContent=`${arr.length} entr${arr.length===1?'y':'ies'}`;$('#cards').innerHTML=arr.map(x=>card(type,x)).join('')||'<div class="empty">No matching entries.</div>';
+}
 function paramSummary(x){const names=['HP','MP','ATK','DEF','M.ATK','M.DEF','AGI','LUK'];const p=x.params||[];return names.map((n,i)=>{const v=Number(p[i]||0);if(!v)return '';return `<span class="mini-stat ${v>0?'positive':'negative'}">${n} ${v>0?'+':''}${v}</span>`}).join('')}
 function paramSummaryText(x){const names=['HP','MP','ATK','DEF','M.ATK','M.DEF','AGI','LUK'];const p=x.params||[];return names.map((n,i)=>{const v=Number(p[i]||0);if(!v)return '';return `${n} ${v>0?'+':''}${v}`}).filter(Boolean).join(' · ')}
 function valueClass(v){return v>0?'positive':v<0?'negative':'muted'}
@@ -355,7 +411,19 @@ function bindAccess(){
   }
 }
 function bindCardRoutes(){document.querySelectorAll('.card-link').forEach(c=>c.addEventListener('click',e=>{const href=c.getAttribute('href');if(!href||!href.startsWith('#'))return;e.preventDefault();const target=href.slice(1);if(location.hash.slice(1)===target)route();else location.hash=target;}))}
-function route(){document.body.classList.remove('modal-open');const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});$('#filterSelect')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()})}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
+function route(){document.body.classList.remove('modal-open');const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();bindDetailSideNav();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter-select').forEach(el=>el.addEventListener('change',()=>{renderList(base);bindCardRoutes()}));document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()})}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
+function bindDetailSideNav(){
+  const shell=document.querySelector('.enemy-detail-shell,.detail-shell'), page=shell?.querySelector('.detail-page'), prev=shell?.querySelector('.detail-prev'), next=shell?.querySelector('.detail-next');
+  if(!shell||!page||!prev||!next)return;
+  const position=()=>{
+    if(window.innerWidth<=760){prev.style.cssText='';next.style.cssText='';return;}
+    const r=page.getBoundingClientRect(), width=108, gap=16;
+    prev.style.position='fixed';prev.style.width=`${width}px`;prev.style.minWidth=`${width}px`;prev.style.maxWidth=`${width}px`;prev.style.left=`${Math.max(8,r.left-width-gap)}px`;prev.style.right='auto';prev.style.top='50%';prev.style.transform='translateY(-50%)';
+    next.style.position='fixed';next.style.width=`${width}px`;next.style.minWidth=`${width}px`;next.style.maxWidth=`${width}px`;next.style.right=`${Math.max(8,window.innerWidth-r.right-width-gap)}px`;next.style.left='auto';next.style.top='50%';next.style.transform='translateY(-50%)';
+  };
+  position();window.addEventListener('resize',position);window.addEventListener('scroll',position,{passive:true});
+}
+
 function bindEnemySticky(){
   const top=document.querySelector('.enemy-detail-top'), sticky=document.querySelector('.enemy-sticky-id'), footer=document.querySelector('.footer');
   if(!top||!sticky||!('IntersectionObserver' in window))return;
