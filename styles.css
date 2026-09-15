@@ -655,3 +655,19 @@ body.modal-open{overflow:hidden}
   .enemy-level-select{width:100%}
   .enemy-stats-title{align-items:flex-start}
 }
+/* v0.0.4AI enemy ascension preview */
+.fact-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.enemy-preview-controls{display:grid;gap:7px;margin-bottom:12px}
+.enemy-preview-controls .enemy-level-preview{margin:0}
+.ascension-preview{border-color:#263b43;background:#0d1418}
+.ascension-preview-label{color:#6eb5c2}
+.bar-ascension-fill{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:999px;background:linear-gradient(90deg,#3a9fb0,#75d7df);box-shadow:0 0 8px rgba(88,202,214,.25);transition:left .35s ease,width .45s cubic-bezier(.22,.72,0,1)}
+.level-preview-active .stat-value{color:#e5bf55}
+.level-preview-active .growth-list .data-value{color:#e5bf55}
+.level-preview-active .growth-list .data-label{color:#8c7a5b}
+.boss-add-tag{color:#72b9c4;border-color:#72b9c455;background:#72b9c414}
+.ascension-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ascension-card{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.ascension-number{width:32px;height:32px;border:1px solid #4b3b6b;border-radius:8px;display:grid;place-items:center;background:#151126;color:#c8b6ef;font:700 12px JetBrains Mono}
+.ascension-note{margin-top:14px}
+@media(max-width:760px){.fact-grid{grid-template-columns:1fr 1fr}.ascension-grid{grid-template-columns:1fr}}

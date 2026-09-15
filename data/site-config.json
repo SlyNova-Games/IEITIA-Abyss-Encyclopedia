@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AH",
+  "version": "0.0.4AI",
   "lastUpdated": "2026-09-15",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AI",
+      "date": "2026-09-15",
+      "changes": "Refined enemy level growth overrides, combined XP/Gold/Abyss Essence/Level Range into one fact row, added cumulative Ascension previews with distinct stat-bar overlays, added Boss Add labeling, and documented Ascension Levels including the boss-only Ascension 5 +50% stat bonus."
+    },
     {
       "version": "0.0.4AH",
       "date": "2026-09-15",
