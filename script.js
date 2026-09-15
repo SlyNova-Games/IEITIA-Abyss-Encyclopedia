@@ -417,23 +417,10 @@ function bindAccess(){
   }
 }
 function bindCardRoutes(){document.querySelectorAll('.card-link').forEach(c=>c.addEventListener('click',e=>{const href=c.getAttribute('href');if(!href||!href.startsWith('#'))return;e.preventDefault();const target=href.slice(1);if(location.hash.slice(1)===target)route();else location.hash=target;}))}
-function resetListControls(base){const search=$('#search'),sort=$('#sort');if(search)search.value='';if(sort)sort.value='name-az';document.querySelectorAll('.filter').forEach((b,i)=>b.classList.toggle('active',i===0));document.querySelectorAll('.filter-select').forEach(el=>el.value='all');renderList(base);bindCardRoutes()}
+function defaultSort(type){return (type==='weapons'||type==='armors')?'tier-low':(type==='enemies'?'name-az':(type==='skills'?'name-az':'name-az'))}
+function resetListControls(base){const search=$('#search'),sort=$('#sort');if(search)search.value='';if(sort)sort.value=defaultSort(base);document.querySelectorAll('.filter').forEach((b,i)=>b.classList.toggle('active',i===0));document.querySelectorAll('.filter-select').forEach(el=>el.value='all');renderList(base);bindCardRoutes()}
 function route(){document.body.classList.remove('modal-open');const raw=(location.hash||'#home').slice(1)||'home';document.body.innerHTML=page(raw);applyPrefs();window.scrollTo({top:0,left:0,behavior:'auto'});nav(raw.split('/')[0]);bindGlobal();bindAccess();bindCardRoutes();bindDetailSideNav();if(!raw.includes('/')&&raw!=='home'){const base=raw;renderList(base);bindCardRoutes();$('#search')?.addEventListener('input',()=>{renderList(base);bindCardRoutes()});$('#sort')?.addEventListener('change',()=>{renderList(base);bindCardRoutes()});document.querySelectorAll('.filter-select').forEach(el=>el.addEventListener('change',()=>{renderList(base);bindCardRoutes()}));document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderList(base);bindCardRoutes()});$('#clearFilters')?.addEventListener('click',()=>resetListControls(base))}if(raw.includes('/')&&raw.split('/')[0]==='enemies'){setTimeout(animateBars,70);setTimeout(bindEnemySticky,0);setTimeout(bindEnemyExpand,0)}}
-function bindDetailSideNav(){
-  const shell=document.querySelector('.enemy-detail-shell,.detail-shell'), page=shell?.querySelector('.detail-page'), prev=shell?.querySelector('.detail-prev'), next=shell?.querySelector('.detail-next');
-  if(!shell||!page||!prev||!next)return;
-  const position=()=>{
-    if(window.innerWidth<=760){prev.style.cssText='';next.style.cssText='';return;}
-    const zoom=Math.max(0.1,parseFloat(getComputedStyle(document.body).zoom)||1);
-    const r=page.getBoundingClientRect(), width=108, gap=16, desiredTop=150;
-    const left=Math.max(8,(r.left-width-gap)/zoom), right=Math.max(8,(window.innerWidth-r.right-width-gap)/zoom), top=desiredTop/zoom;
-    [prev,next].forEach(el=>{el.style.position='fixed';el.style.width=`${width}px`;el.style.minWidth=`${width}px`;el.style.maxWidth=`${width}px`;el.style.top=`${top}px`;el.style.transform='none';el.style.boxSizing='border-box';el.style.overflow='hidden';});
-    prev.style.left=`${left}px`;prev.style.right='auto';
-    next.style.right=`${right}px`;next.style.left='auto';
-  };
-  position();window.addEventListener('resize',position);
-}
-
+function bindDetailSideNav(){}
 function bindEnemySticky(){
   const top=document.querySelector('.enemy-detail-top'), sticky=document.querySelector('.enemy-sticky-id'), footer=document.querySelector('.footer');
   if(!top||!sticky||!('IntersectionObserver' in window))return;

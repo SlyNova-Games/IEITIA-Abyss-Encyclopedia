@@ -2,9 +2,9 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AF",
+  "version": "0.0.4AG",
   "lastUpdated": "2026-09-14",
-  "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
+  "dataStatus": "Beta encyclopedia \u2014 entries and values may change as the game is updated.",
   "socials": {
     "Discord": "",
     "YouTube": "",
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AG",
+      "date": "2026-09-14",
+      "changes": "Adjusted Previous/Next navigation to a stable, wider outer-gutter position with long-name truncation and responsive narrow-desktop placement; Clear Filters now restores the correct tier-low-to-high default for Weapons and Armor and uses a compact single-line tooltip."
+    },
     {
       "version": "0.0.4AF",
       "date": "2026-09-14",

@@ -577,3 +577,59 @@ body.modal-open{overflow:hidden}
   .detail-side-nav{position:fixed !important;top:150px !important;transform:none !important;z-index:85;}
   .detail-side-nav:hover{transform:none !important;}
 }
+
+
+/* v0.0.4AG: predictable outer-gutter navigation + compact Clear Filters tooltip */
+@media(min-width:1051px){
+  .detail-side-nav{
+    position:fixed !important;
+    top:150px !important;
+    transform:none !important;
+    width:108px !important;
+    min-width:108px !important;
+    max-width:108px !important;
+    box-sizing:border-box !important;
+    overflow:hidden !important;
+    z-index:85;
+  }
+  /* The detail page is centered inside the 225px sidebar layout. Keep the
+     navigation clearly outside that page with a stable gutter gap. */
+  .detail-prev{
+    left:calc(225px + max(0px,(100vw - 225px - 1180px)/2) - 170px) !important;
+    right:auto !important;
+  }
+  .detail-next{
+    right:max(0px,(100vw - 225px - 1180px)/2 - 170px) !important;
+    left:auto !important;
+  }
+  .detail-side-nav:hover{transform:none !important;}
+  .detail-side-nav strong{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+}
+@media(max-width:1050px) and (min-width:761px){
+  .detail-side-nav{
+    position:fixed !important;
+    top:150px !important;
+    transform:none !important;
+    width:88px !important;
+    min-width:88px !important;
+    max-width:88px !important;
+    overflow:hidden !important;
+  }
+  .detail-prev{left:8px !important;right:auto !important;}
+  .detail-next{right:8px !important;left:auto !important;}
+  .detail-side-nav:hover{transform:none !important;}
+  .detail-side-nav strong{display:block !important;max-width:100% !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;}
+}
+.clear-filters[data-tooltip]::after{
+  width:max-content !important;
+  min-width:0 !important;
+  max-width:none !important;
+  white-space:nowrap !important;
+}
