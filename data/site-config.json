@@ -2,7 +2,7 @@
   "gameTitle": "Infinite Echoes in The Infinite Abyss",
   "shortTitle": "Infinite Echoes",
   "subtitle": "THE INFINITE ABYSS ENCYCLOPEDIA",
-  "version": "0.0.4AL",
+  "version": "0.0.4AM",
   "lastUpdated": "2026-09-15",
   "dataStatus": "Beta encyclopedia — entries and values may change as the game is updated.",
   "socials": {
@@ -13,6 +13,11 @@
     "GitHub": ""
   },
   "versionHistory": [
+    {
+      "version": "0.0.4AM",
+      "date": "2026-09-15",
+      "changes": "Corrected Ascension 1 to grant +1 ATK instead of +1 HP, marked Elite enemies as spoilers, added the Boss Add label to enemy cards, matched Ascension preview text styling across stat names, and refined sidebar readability."
+    },
     {
       "version": "0.0.4AL",
       "date": "2026-09-15",

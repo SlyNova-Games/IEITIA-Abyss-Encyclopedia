@@ -716,3 +716,10 @@ body.modal-open{overflow:hidden}
 .rarity-list{gap:2px}
 .rarity-row{font-size:8.25px;padding:1.5px 0}
 .sidebar-note{font-size:7.35px;line-height:1.35;margin-top:8px}
+
+
+/* v0.0.4AM: Ascension stat labels and sidebar readability */
+.ascension-preview-active .stat-name{color:#73c9d6}
+.ascension-preview-active .stat-row:hover .stat-name,.ascension-preview-active .stat-row:focus-visible .stat-name{color:#9be2ea}
+.side-links a{font-size:12.5px;line-height:1.12;padding-top:4px;padding-bottom:4px}
+.sidebar-note{font-size:8.15px;line-height:1.4;margin-top:7px}
